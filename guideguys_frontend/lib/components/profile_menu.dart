@@ -3,6 +3,7 @@ import 'package:guideguys/components/seperate_line.dart';
 import 'package:guideguys/constants/colors.dart';
 import 'package:guideguys/local_storage/secure_storage.dart';
 import 'package:guideguys/modules/home/home_view.dart';
+import 'package:guideguys/modules/login/login_view.dart';
 import 'package:guideguys/modules/my_tour_list/my_tour_list_view.dart';
 import 'package:guideguys/modules/travel_history/travel_history_view.dart';
 
@@ -14,72 +15,95 @@ class ProfileMenu extends StatelessWidget {
 
   final double width;
 
+  Future<String> getUsername() async {
+    return await SecureStorage().readSecureData('myUsername');
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      backgroundColor: bgColor,
-      width: width * 0.75,
-      child: Column(
-        children: [
-          profileInfo(width),
-          const SeperateLine(),
-          profileMenuCardList(
-            width: width,
-            cardIcon: Icons.person,
-            cardTitle: 'Edit Profile',
-            onPressed: () {},
-          ),
-          const SeperateLine(),
-          profileMenuCardList(
-            width: width,
-            cardIcon: Icons.settings,
-            cardTitle: 'Settings',
-            onPressed: () {},
-          ),
-          const SeperateLine(),
-          profileMenuCardList(
-            width: width,
-            cardIcon: Icons.work,
-            cardTitle: 'Work History',
-            onPressed: () {},
-          ),
-          const SeperateLine(),
-          profileMenuCardList(
-            width: width,
-            cardIcon: Icons.tour_outlined,
-            cardTitle: 'My Tour',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => const MyTourListView(),
-                ),
-              );
-            },
-          ),
-          const SeperateLine(),
-          profileMenuCardList(
-            width: width,
-            cardIcon: Icons.history,
-            cardTitle: 'Travel History',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => const TravelHistoryView(),
-                ),
-              );
-            },
-          ),
-          const SeperateLine(),
-          profileMenuCardList(
-              width: width,
-              cardIcon: Icons.logout,
-              cardTitle: 'Logout',
-              onPressed: () {}),
-        ],
-      ),
-    );
+    return FutureBuilder(
+        future: SecureStorage().readSecureData('myUsername'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            String myUsername = snapshot.data ?? '';
+            return Drawer(
+              backgroundColor: bgColor,
+              width: width * 0.75,
+              child: Column(
+                children: [
+                  profileInfo(width, myUsername),
+                  const SeperateLine(),
+                  profileMenuCardList(
+                    width: width,
+                    cardIcon: Icons.person,
+                    cardTitle: 'Edit Profile',
+                    onPressed: () {},
+                  ),
+                  const SeperateLine(),
+                  profileMenuCardList(
+                    width: width,
+                    cardIcon: Icons.settings,
+                    cardTitle: 'Settings',
+                    onPressed: () {},
+                  ),
+                  const SeperateLine(),
+                  profileMenuCardList(
+                    width: width,
+                    cardIcon: Icons.work,
+                    cardTitle: 'Work History',
+                    onPressed: () {},
+                  ),
+                  const SeperateLine(),
+                  profileMenuCardList(
+                    width: width,
+                    cardIcon: Icons.tour_outlined,
+                    cardTitle: 'My Tour',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const MyTourListView(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SeperateLine(),
+                  profileMenuCardList(
+                    width: width,
+                    cardIcon: Icons.history,
+                    cardTitle: 'Travel History',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const TravelHistoryView(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SeperateLine(),
+                  profileMenuCardList(
+                      width: width,
+                      cardIcon: Icons.logout,
+                      cardTitle: 'Logout',
+                      onPressed: () {
+                        SecureStorage().deleteAllData();
+                        Navigator.popUntil(context, (route) => route.isFirst);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginView()),
+                        );
+                      }),
+                ],
+              ),
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
+        });
   }
 
   GestureDetector profileMenuCardList({
@@ -116,8 +140,7 @@ class ProfileMenu extends StatelessWidget {
     );
   }
 
-  Container profileInfo(double width) {
-
+  Container profileInfo(double width, String myUsername) {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
       child: Row(
@@ -133,7 +156,7 @@ class ProfileMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Olivia Rhye',
+                myUsername,
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: grey700,

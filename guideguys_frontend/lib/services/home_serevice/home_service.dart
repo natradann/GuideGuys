@@ -10,7 +10,7 @@ class HomeService implements HomeServiceInterface {
   String ip = localhostIp;
   @override
   Future<List<GuideModel>> fetchAllGuides() async {
-    String token = await SecureStorage().readSecureData('token');
+    String token = await SecureStorage().readSecureData('myToken');
     http.Response response = await http.get(
       Uri.parse("$ngrokLink/guides/get/all"),
       headers: {
@@ -20,7 +20,7 @@ class HomeService implements HomeServiceInterface {
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body)['guides']
+      return jsonDecode(response.body)
           .map<GuideModel>((guide) => GuideModel.fromJson(guide))
           .toList();
     } else if (response.statusCode == 500) {
@@ -38,7 +38,7 @@ class HomeService implements HomeServiceInterface {
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body)['allTours']
+      return jsonDecode(response.body)
           .map<TourCardLGModel>((tour) => TourCardLGModel.fromJson(tour))
           .toList();
     } else if (response.statusCode == 500) {

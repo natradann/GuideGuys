@@ -5,7 +5,6 @@ import 'package:guideguys/services/ip_for_connect.dart';
 import 'package:http/http.dart' as http;
 
 class ToureDetailService implements TourDetailServiceInterface {
-  String ip = localhostIp;
   @override
   Future<TourDetailModel> fetchTourDetail({required String tourId}) async {
     http.Response response = await http.get(
@@ -16,7 +15,7 @@ class ToureDetailService implements TourDetailServiceInterface {
     );
 
     if (response.statusCode == 200) {
-      return TourDetailModel.fromJson(jsonDecode(response.body)['tourDetail']);
+      return TourDetailModel.fromJson(jsonDecode(response.body));
     } else if (response.statusCode == 500) {
       throw Exception("Internal Server Error");
     } else {

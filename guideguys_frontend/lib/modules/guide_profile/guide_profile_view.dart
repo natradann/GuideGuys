@@ -42,6 +42,11 @@ class _GuideProfileViewState extends State<GuideProfileView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = screenWidth(context);
     double height = screenHeight(context);
@@ -129,7 +134,6 @@ class _GuideProfileViewState extends State<GuideProfileView> {
                           MaterialPageRoute(
                             builder: (context) => ChatView(
                               guideId: _viewModel.guideProfile.guideId,
-                              receiverUsername: _viewModel.guideProfile.guideName,
                               receiverId: _viewModel.guideProfile.guideUserId,
                               role: 'tourist',
                             ),

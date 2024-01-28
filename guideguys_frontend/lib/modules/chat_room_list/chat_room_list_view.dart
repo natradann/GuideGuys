@@ -20,6 +20,12 @@ class _ChatRoomListViewState extends State<ChatRoomListView> {
   void initState() {
     super.initState();
     _viewModel = ChatRoomListViewModel();
+    _viewModel.roomListData = _viewModel.readAllChatRoomInfo();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -29,7 +35,7 @@ class _ChatRoomListViewState extends State<ChatRoomListView> {
         backgroundColor: bgColor,
         appBar: CustomAppBar(appBarKey: _scaffoldKey, isChat: true),
         body: FutureBuilder(
-            future: _viewModel.readAllChatRoomInfo(),
+            future: _viewModel.roomListData,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Column(

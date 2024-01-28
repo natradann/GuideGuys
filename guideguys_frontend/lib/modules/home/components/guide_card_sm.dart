@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/star_rate.dart';
-import 'package:guideguys/components/tag_in_card.dart';
 import 'package:guideguys/constants/colors.dart';
 import 'package:guideguys/modules/guide_profile/guide_profile_view.dart';
 import 'package:guideguys/modules/home/home_model.dart';
@@ -55,12 +56,19 @@ class GuideCardSM extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    model.guideImgPath,
-                    height: cardHeight * 0.53,
-                    width: cardWidth,
-                    fit: BoxFit.cover,
-                  ),
+                  (model.guideImg != null)
+                      ? Image.memory(
+                          base64Decode(model.guideImg!),
+                          height: cardHeight * 0.56,
+                          width: screenWidth,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          "assets/images/blank-profile-picture.png",
+                          height: cardHeight * 0.53,
+                          width: cardWidth,
+                          fit: BoxFit.cover,
+                        ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Column(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/custom_appbar.dart';
 import 'package:guideguys/components/profile_menu.dart';
@@ -33,12 +35,17 @@ class TourDetialView extends StatefulWidget {
 
 class _TourDetialViewState extends State<TourDetialView> {
   late TourDetailViewModel _viewModel;
-   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     _viewModel = TourDetailViewModel();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -49,7 +56,9 @@ class _TourDetialViewState extends State<TourDetialView> {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: bgColor,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         endDrawer: ProfileMenu(width: width),
         body: FutureBuilder(
           future: _viewModel.fetchTourDetail(tourId: widget.tourId),
@@ -58,12 +67,26 @@ class _TourDetialViewState extends State<TourDetialView> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset(
-                    _viewModel.tour.imgPath,
-                    height: height * 0.3,
-                    width: width,
-                    fit: BoxFit.cover,
-                  ),
+                  (_viewModel.tour.tourImage != null)
+                      ? Image.memory(
+                          base64Decode(
+                              _viewModel.tour.tourImage!),
+                          height: height * 0.3,
+                          width: width,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          "assets/images/blank-profile-picture.png",
+                          height: height * 0.3,
+                          width: width,
+                          fit: BoxFit.cover,
+                        ),
+                  // Image.asset(
+                  //   _viewModel.tour.imgPath,
+                  //   height: height * 0.3,
+                  //   width: width,
+                  //   fit: BoxFit.cover,
+                  // ),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Padding(
@@ -119,7 +142,6 @@ class _TourDetialViewState extends State<TourDetialView> {
                           MaterialPageRoute(
                             builder: (BuildContext context) => ChatView(
                               guideId: _viewModel.tour.guideId,
-                              receiverUsername: _viewModel.tour.username,
                               receiverId: _viewModel.tour.guideUserId,
                               role: 'guide',
                             ),

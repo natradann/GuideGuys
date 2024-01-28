@@ -28,22 +28,25 @@ const createComfirmForm = async (req: Request, res: Response, next: NextFunction
 };
 
 const getWaitingToConfirmForm = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        
+    try {    
         const historyRepository = AppDataSource.getRepository(History);
         const historyMatch = await historyRepository.createQueryBuilder('history')
         .leftJoinAndSelect('history.customer', 'customer')
         .leftJoinAndSelect('history.guide', 'guide')
         .leftJoinAndSelect('guide.user', 'user')
         .where('customer.username = :username', {username: res.locals.jwt.username})
+        .andWhere('user.id = :guideUserId', {guideUserId: req.params.guideUserId})
         .andWhere('history.status = :status', {status: "waiting for confirm"})
         .select(['history.id', 'history.tour_name', 'history.status', 
         'history.start_date', 'history.end_date', 'history.price',
-         'guide.id', 'user.username'])
+        'guide.id', 'user.username'])
         .getOne();
 
+
         if(historyMatch != null){
-            return res.status(200).json({
+            return res.status(200).json(
+                // historyMatch
+                {
                 'historyId': historyMatch.id,
                 'status': historyMatch.status,
                 'tourName': historyMatch.tour_name,
@@ -52,7 +55,8 @@ const getWaitingToConfirmForm = async (req: Request, res: Response, next: NextFu
                 'start_date': historyMatch.start_date,
                 'end_date': historyMatch.end_date,
                 'price': historyMatch.price,
-                })
+                }
+            );
         } else {
             return res.status(404).json();
         }
@@ -75,8 +79,6 @@ const getConfirmTourDetail = async (req: Request, res: Response, next: NextFunct
         .select(['history', 'guide.card_no', 'guide.languages', 'user.first_name', 'user.last_name', 'user.username'])
         .where('history.id = :historyId', {historyId: req.params.historyId})
         .getOne();
-
-        console.log(historyMatch);
 
         if(historyMatch != null) {
             return res.status(200).json({

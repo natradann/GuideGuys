@@ -14,7 +14,7 @@ const getChatRoom = async (req: Request, res: Response, next: NextFunction) => {
         const chatRoom = await chatRepository.createQueryBuilder('chat')
         .innerJoinAndSelect("chat.user1", "user1")
         .innerJoinAndSelect("chat.user2", "user2")
-        .select(["chat.room_id", "user1.id", "user2.id"])
+        .select(["chat.room_id", "user1.id", "user1.username", "user2.id", "user2.username"])
         .where(
             new Brackets((qb) => {
                 qb.where("user1.id = :SenderId", { SenderId: chatUsers.senderId })
@@ -28,8 +28,23 @@ const getChatRoom = async (req: Request, res: Response, next: NextFunction) => {
         )
         .getOne();
 
+        
+        
+
         if(chatRoom != null) {
-            return res.status(200).json(chatRoom.room_id);
+            if(chatRoom.user1.id == chatUsers.receiverId) {
+                const chatRoomDetail = {
+                "room_id": chatRoom.room_id,
+                "receiver_username": chatRoom.user1.username,
+                }
+                return res.status(200).json(chatRoomDetail);
+            } else {
+                const chatRoomDetail = {
+                    "room_id": chatRoom.room_id,
+                    "receiver_username": chatRoom.user2.username,
+                }
+                return res.status(200).json(chatRoomDetail);
+            }
         }
 
         const newChatRoom = await chatRepository.save({
@@ -103,7 +118,7 @@ const getAllChatRoom = async (req: Request, res: Response, next:NextFunction) =>
                 "user1_username": chatRoom.user1.username,
                 "user2_id": chatRoom.user2.id,
                 "user2_username": chatRoom.user2.username,
-                "last_msg": chatRoom.message[0]
+                "last_msg": chatRoom.message[0] ?? {}
             }))
         );
     } catch (error) {

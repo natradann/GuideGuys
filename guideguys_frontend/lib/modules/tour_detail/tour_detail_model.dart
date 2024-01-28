@@ -3,10 +3,10 @@ import 'dart:convert';
 class TourDetailModel {
   late String tourId;
   late String tourName;
+  late String? tourImage;
   late String username;
   late String guideUserId;
   late String guideId;
-  late String imgPath;
   late List<String> languages;
   late List<String> convinces;
   late List<String> vehicle;
@@ -18,10 +18,10 @@ class TourDetailModel {
   TourDetailModel({
     required this.tourId,
     required this.tourName,
+    this.tourImage,
     required this.username,
     required this.guideUserId,
     required this.guideId,
-    this.imgPath = "assets/images/blank-profile-picture.png",
     required this.languages,
     required this.convinces,
     required this.vehicle,
@@ -36,6 +36,7 @@ class TourDetailModel {
       TourDetailModel tourDetail = TourDetailModel(
         tourId: json['tour_id'].toString(),
         tourName: json['tour_name'],
+        tourImage: (json['tour_img'] == null) ? null : json['tour_img'],
         username: json['user_username'],
         guideUserId: json['user_id'],
         guideId: json['tour_guide_id'],
@@ -45,7 +46,7 @@ class TourDetailModel {
         convinces: (jsonDecode(json['tour_convinces']) as List<dynamic>)
             .map<String>((convince) => convince.toString())
             .toList(),
-        vehicle: (jsonDecode(json['tour_vehicle']) as List<dynamic>)
+        vehicle: (jsonDecode(json['tour_vehicles']) as List<dynamic>)
             .map<String>((vehicle) => vehicle.toString())
             .toList(),
         type: (jsonDecode(json['tour_type']) as List<dynamic>)
@@ -58,7 +59,8 @@ class TourDetailModel {
       return tourDetail;
     } catch (error) {
       throw Exception(
-          'Error on tour in tourName: ${json['tour_name']} and tourId: ${json['tour_id']}');
+        'Error on tour in tourName: ${json['tour_name']} and tourId: ${json['tour_id']} error on $error',
+      );
     }
   }
 }

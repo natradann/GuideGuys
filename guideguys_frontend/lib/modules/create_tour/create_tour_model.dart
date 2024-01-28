@@ -8,6 +8,7 @@ String createTourModelToJson(CreateTourModel data) =>
 
 class CreateTourModel {
   String tourName;
+  String base64Image;
   List<String> convinces;
   List<String> vehicle;
   List<String> tourType;
@@ -16,6 +17,7 @@ class CreateTourModel {
 
   CreateTourModel({
     required this.tourName,
+    required this.base64Image,
     required this.convinces,
     required this.vehicle,
     required this.tourType,
@@ -26,6 +28,7 @@ class CreateTourModel {
   factory CreateTourModel.fromJson(Map<String, dynamic> json) =>
       CreateTourModel(
         tourName: json["tourName"],
+        base64Image: json["img"],
         convinces: List<String>.from(json["convinces"].map((x) => x)),
         vehicle: json["vehicle"],
         tourType: json["tourType"],
@@ -35,11 +38,11 @@ class CreateTourModel {
 
   Map<String, dynamic> toJson() => {
         "tourName": tourName,
-        "convinces": List<dynamic>.from(convinces.map((x) => x)),
+        "img": base64Image,
+        "convinces": convinces,
         "vehicle": vehicle,
         "tourType": tourType,
         "detail": detail,
         "price": price,
       };
 }
-

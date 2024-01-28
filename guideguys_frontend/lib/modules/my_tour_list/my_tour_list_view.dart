@@ -31,8 +31,8 @@ class _MyTourListViewState extends State<MyTourListView> {
   late TextEditingController tagsController;
   late List<String> typeTourList;
   late List<String> typeVehicleList;
- final _scaffoldKey = GlobalKey<ScaffoldState>();
- 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +40,12 @@ class _MyTourListViewState extends State<MyTourListView> {
     tagsController = TextEditingController();
     typeTourList = [];
     typeVehicleList = [];
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    tagsController.dispose();
   }
 
   @override
@@ -51,7 +57,9 @@ class _MyTourListViewState extends State<MyTourListView> {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: bgColor,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         endDrawer: ProfileMenu(width: width),
         body: FutureBuilder(
             future: _viewModel.fetchAllTourList(),

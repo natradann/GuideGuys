@@ -13,7 +13,7 @@ class ChatRoomListMockService implements ChatRoomListServiceInterface {
           user2Id: "c3e3bc61-e366-4554-a457-7b6139ccff5e",
           user2Username: "nina",
           lastMsg: LastMsg(
-            id: 16,
+            id: '16',
             msgText: "hihih",
             commentDate: DateTime.parse("2024-01-23T09:23:30.000Z"),
           ),

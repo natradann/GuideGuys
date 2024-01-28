@@ -9,11 +9,12 @@ class ChatService implements ChatServiceInterface {
   String ip = localhostIp;
 
   @override
-  Future<ChatModel?> fetchWaitingStatusConfirmForm() async {
-    String token = await SecureStorage().readSecureData('token');
+  Future<WaitingConfirmCardModel?> fetchWaitingStatusConfirmForm(
+      {required String userIdGuide}) async {
+    String token = await SecureStorage().readSecureData('myToken');
     try {
       http.Response response = await http.get(
-        Uri.parse('$ngrokLink/history/get/waiting/confirm'),
+        Uri.parse('$ngrokLink/history/get/waiting/confirm/$userIdGuide'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
@@ -21,7 +22,7 @@ class ChatService implements ChatServiceInterface {
       );
 
       if (response.statusCode == 200) {
-        return chatFromJson(response.body);
+        return waitingConfirmCardFromJson(response.body);
       } else if (response.statusCode == 404) {
         return null;
       } else if (response.statusCode == 500) {
@@ -35,7 +36,7 @@ class ChatService implements ChatServiceInterface {
   }
 
   @override
-  Future<String> fetchChatRoom(
+  Future<ChatModel> fetchChatRoom(
       {required String senderId, required String receiverId}) async {
     try {
       http.Response response = await http.post(
@@ -47,7 +48,7 @@ class ChatService implements ChatServiceInterface {
         }),
       );
       if (response.statusCode == 200) {
-        return jsonDecode(response.body).toString();
+        return chatModelFromJson(response.body);
       } else if (response.statusCode == 500) {
         throw Exception("Internal Server Error");
       } else {

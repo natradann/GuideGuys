@@ -14,8 +14,8 @@ export class Guide {
     @Column({nullable: false})
     type: string
     
-    @Column({type: "blob", nullable: true})
-    img: string
+    @Column({type: "longblob", nullable: true})
+    img: Buffer
 
     @Column({type: "datetime"})
     card_expired: string

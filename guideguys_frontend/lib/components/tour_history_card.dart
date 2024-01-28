@@ -53,10 +53,21 @@ class TourHistoryCard extends StatelessWidget {
                 ),
                 //เพิ่ม status & แก้สีตัวอักษร
                 Text(
-                  (status == 'waiting for confirm')? 'รอการยืนยัน' 
-                  : (status == 'review') ?'รอการรีวิว': 'สำเร็จ',
+                  (status == '0')
+                      ? 'รอการยืนยัน'
+                      : (status == '1')
+                          ? 'ยืนยันสำเร็จ'
+                          : (status == '2')
+                              ? 'รอการรีวิว'
+                              : 'สำเร็จ',
                   style: TextStyle(
-                    color: Colors.purple,
+                    color: (status == '0')
+                        ? yellow
+                        : (status == '1')
+                            ? Colors.green
+                            : (status == '2')
+                                ? Colors.purple
+                                : Colors.green,
                     fontWeight: FontWeight.w500,
                     fontSize: screenWidth * 0.03,
                   ),

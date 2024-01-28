@@ -15,8 +15,8 @@ export class Tour {
     @JoinColumn({name: "guide_id"})
     guide: Guide
 
-    @Column({type: "blob", nullable: true})
-    img: string
+    @Column({type: "longblob", nullable: true})
+    img: Buffer
 
     @Column({type: "json", nullable: false})
     convinces: string[]

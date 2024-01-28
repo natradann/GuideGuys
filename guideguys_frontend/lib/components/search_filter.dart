@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:guideguys/constants/colors.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
@@ -20,14 +21,15 @@ class SearchFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> typeList;
-    List<String> vehicleList;
+    print('hi');
+    List<String> typeList = [];
+    List<String> vehicleList = [];
     return IconButton(
       onPressed: () {
         typeList = typeTourList;
         vehicleList = typeVehicleList;
-        print('typeList: $typeList');
-        print('tourTypeList: $typeTourList');
+        print('typeList-1: $typeList');
+        print('tourTypeList-1: $typeTourList');
         filterOption(context, checkValue, typeList, vehicleList);
       },
       alignment: Alignment.center,
@@ -103,55 +105,15 @@ class SearchFilter extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
-                MultiSelectContainer(
-                  itemsDecoration: MultiSelectDecorations(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: white,
-                      border: Border.all(color: yellow),
-                    ),
-                    selectedDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: yellow,
-                      border: Border.all(color: yellow),
-                    ),
-                  ),
-                  items: [
-                    MultiSelectCard(
-                      value: 'ผจญภัย',
-                      label: 'ผจญภัย',
-                      selected: adventure,
-                    ),
-                    MultiSelectCard(
-                      value: 'ชอปปิง',
-                      label: 'ชอปปิง',
-                      selected: shopping,
-                    ),
-                    MultiSelectCard(
-                      value: 'ธรรมชาติ',
-                      label: 'ธรรมชาติ',
-                      selected: nature,
-                    ),
-                    MultiSelectCard(
-                      value: 'วัฒนธรรม ประวัติศาสตร์',
-                      label: 'วัฒนธรรม ประวัติศาสตร์',
-                      selected: culture,
-                    ),
-                    MultiSelectCard(
-                      value: 'ชนบท',
-                      label: 'ชนบท',
-                      selected: rural,
-                    ),
-                    MultiSelectCard(
-                        value: 'Dark Tourism',
-                        label: 'Dark Tourism',
-                        selected: darkTour),
-                  ],
-                  onChange: (allSelectedItems, selectedItem) {
-                    setState(() {
-                      typeTourList = allSelectedItems;
-                    });
-                  },
+                typeTourMultiSelect(
+                  adventure,
+                  shopping,
+                  nature,
+                  culture,
+                  rural,
+                  darkTour,
+                  typeList,
+                  setState,
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -159,78 +121,155 @@ class SearchFilter extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
-                MultiSelectContainer(
-                  itemsDecoration: MultiSelectDecorations(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: white,
-                      border: Border.all(color: yellow),
-                    ),
-                    selectedDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: yellow,
-                      border: Border.all(color: yellow),
-                    ),
-                  ),
-                  items: [
-                    MultiSelectCard(
-                        value: 'รถยนต์ส่วนตัว',
-                        label: 'รถยนต์ส่วนตัว',
-                        selected: priCar),
-                    MultiSelectCard(
-                        value: 'รถสาธารณะ',
-                        label: 'รถสาธารณะ',
-                        selected: pubTrans),
-                    MultiSelectCard(
-                      value: 'รถไฟ',
-                      label: 'รถไฟ',
-                      selected: train,
-                    ),
-                    MultiSelectCard(
-                      value: 'เรือ',
-                      label: 'เรือ',
-                      selected: boat,
-                    ),
-                    MultiSelectCard(
-                      value: 'เดิน',
-                      label: 'เดิน',
-                      selected: walk,
-                    ),
-                  ],
-                  onChange: (allSelectedItems, selectedItem) {
-                    typeVehicleList = allSelectedItems;
-                  },
-                )
+                vehicleMultiSelect(
+                  priCar,
+                  pubTrans,
+                  train,
+                  boat,
+                  walk,
+                  vehicleList,
+                ),
               ],
             );
           }),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancel'),
+              onPressed: () {
+                Navigator.pop(context, 'Cancel');
+              },
               child: const Text(
                 'Cancel',
                 style: TextStyle(color: textPurple),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                // setState(() {
-                //   // typeTourList = typeList;
-                //   // typeVehicleList = vehicleList;
-                // });
-                onUpdate!();
-                print('typeTourList: $typeTourList');
-                print('typeVehicle: $typeVehicleList');
+            StatefulBuilder(
+              builder: (context, setState) => TextButton(
+                onPressed: () {
+                  // typeTourList = List.from(typeList); // Create a new list
+                  // typeVehicleList = List.from(vehicleList);
+                  print('typeTourList-2: $typeList');
+                  print('typeVehicle-2: $vehicleList');
 
-                Navigator.pop(context, 'OK');
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: textPurple),
+                  onUpdate!();
+
+                  Navigator.pop(context, 'OK');
+                },
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: textPurple),
+                ),
               ),
             ),
           ],
         );
+      },
+    );
+  }
+
+  MultiSelectContainer<String> vehicleMultiSelect(
+    bool priCar,
+    bool pubTrans,
+    bool train,
+    bool boat,
+    bool walk,
+    List<String> vehicleList,
+  ) {
+    return MultiSelectContainer(
+      itemsDecoration: MultiSelectDecorations(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: white,
+          border: Border.all(color: yellow),
+        ),
+        selectedDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: yellow,
+          border: Border.all(color: yellow),
+        ),
+      ),
+      items: [
+        MultiSelectCard(
+            value: 'รถยนต์ส่วนตัว', label: 'รถยนต์ส่วนตัว', selected: priCar),
+        MultiSelectCard(
+            value: 'รถสาธารณะ', label: 'รถสาธารณะ', selected: pubTrans),
+        MultiSelectCard(
+          value: 'รถไฟ',
+          label: 'รถไฟ',
+          selected: train,
+        ),
+        MultiSelectCard(
+          value: 'เรือ',
+          label: 'เรือ',
+          selected: boat,
+        ),
+        MultiSelectCard(
+          value: 'เดิน',
+          label: 'เดิน',
+          selected: walk,
+        ),
+      ],
+      onChange: (allSelectedItems, selectedItem) {
+        typeVehicleList = allSelectedItems;
+      },
+    );
+  }
+
+  MultiSelectContainer<String> typeTourMultiSelect(
+    bool adventure,
+    bool shopping,
+    bool nature,
+    bool culture,
+    bool rural,
+    bool darkTour,
+    List<String> typeList,
+    StateSetter setState,
+  ) {
+    return MultiSelectContainer(
+      itemsDecoration: MultiSelectDecorations(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: white,
+          border: Border.all(color: yellow),
+        ),
+        selectedDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: yellow,
+          border: Border.all(color: yellow),
+        ),
+      ),
+      items: [
+        MultiSelectCard(
+          value: 'ผจญภัย',
+          label: 'ผจญภัย',
+          selected: adventure,
+        ),
+        MultiSelectCard(
+          value: 'ชอปปิง',
+          label: 'ชอปปิง',
+          selected: shopping,
+        ),
+        MultiSelectCard(
+          value: 'ธรรมชาติ',
+          label: 'ธรรมชาติ',
+          selected: nature,
+        ),
+        MultiSelectCard(
+          value: 'วัฒนธรรม ประวัติศาสตร์',
+          label: 'วัฒนธรรม ประวัติศาสตร์',
+          selected: culture,
+        ),
+        MultiSelectCard(
+          value: 'ชนบท',
+          label: 'ชนบท',
+          selected: rural,
+        ),
+        MultiSelectCard(
+            value: 'Dark Tourism', label: 'Dark Tourism', selected: darkTour),
+      ],
+      onChange: (allSelectedItems, selectedItem) {
+        setState(() {
+          typeTourList = allSelectedItems;
+        });
       },
     );
   }

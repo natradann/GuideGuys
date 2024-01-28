@@ -3,7 +3,7 @@ import 'dart:convert';
 class TourModel {
   late String tourId;
   late String tourName;
-  late String tourImgPath;
+  late String? tourImgPath;
   late List<String> convinces;
   late List<String> vehicles;
   late List<String> languages;
@@ -14,7 +14,7 @@ class TourModel {
   TourModel({
     required this.tourId,
     required this.tourName,
-    this.tourImgPath = "assets/images/blank-profile-picture.png",
+    this.tourImgPath,
     required this.convinces,
     required this.vehicles,
     required this.languages,
@@ -28,6 +28,7 @@ class TourModel {
       TourModel tour = TourModel(
         tourId: json['tour_id'].toString(),
         tourName: json['tour_name'],
+        tourImgPath: json['tour_img'],
         convinces: (jsonDecode(json['tour_convinces']) as List<dynamic>)
             .map<String>((convince) => convince.toString())
             .toList(),
@@ -54,7 +55,7 @@ class TourModel {
 class GuideModel {
   late String guidId;
   late String guideName;
-  late String guideImgPath;
+  late String? guideImgPath;
   late List<String> convinces;
   late List<String> languages;
   late double ratePoint;
@@ -62,7 +63,7 @@ class GuideModel {
   GuideModel({
     required this.guidId,
     required this.guideName,
-    this.guideImgPath = "assets/images/blank-profile-picture.png",
+    this.guideImgPath,
     required this.convinces,
     required this.languages,
     required this.ratePoint,

@@ -44,6 +44,11 @@ class _CreateConfirmGuideViewState extends State<CreateConfirmGuideView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = screenWidth(context);
     double height = screenHeight(context);
@@ -314,7 +319,8 @@ class _CreateConfirmGuideViewState extends State<CreateConfirmGuideView> {
                           labelTFF: 'แผนการท่องเที่ยว (ถ้ามี)',
                           hintTextinTFF: 'รายละเอียดแผนการเที่ยว',
                           textController: tourPlan,
-                          inputAction: TextInputAction.next,
+                          // inputAction: TextInputAction.next,
+                          inputType: TextInputType.multiline,
                           minLineAmount: 5,
                           onEditingEnd: () async {
                             _viewModel.confirmForm.plan = tourPlan.text;

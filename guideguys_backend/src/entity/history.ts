@@ -3,6 +3,7 @@ import { User } from "./user";
 import { Tour } from "./tour";
 import { Guide } from "./guide";
 import { Rate } from "./rate";
+import { Payment } from "./payment";
 
 @Entity({ name: "history"})
 export class History {
@@ -53,4 +54,7 @@ export class History {
 
     @OneToOne(() => Rate, (rate) => rate.history_id)
     rate: number
+
+    @OneToOne(() => Payment, (payment) => payment.history)
+    payment: Payment
 }

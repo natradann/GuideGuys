@@ -32,7 +32,16 @@ const guideRegister = async (req: Request, res: Response, next: NextFunction) =>
                 guideMatch
                 });
             } else {
-                await guideRepository.save(newGuide);
+                await guideRepository.save({
+                    img: Buffer.from(newGuide.img, 'base64'),
+                    card_no: newGuide.card_no,
+                    type: newGuide.type,
+                    card_expired: newGuide.card_expired,
+                    convinces: newGuide.convinces,
+                    languages: newGuide.languages,
+                    experience: newGuide.experience,
+                    point: newGuide.point,
+                  });
                 const userRepository = AppDataSource.getRepository(User);
                 await userRepository.update({username: guideUsername}, {guide: newGuide});
                 return res.status(200).json({
@@ -61,9 +70,17 @@ const getAllGuides = async (req: Request, res: Response, next: NextFunction) => 
          'guide.convinces', 'guide.languages'])
         .getRawMany();
 
-        return res.status(200).json({
-            guides
-        })
+        return res.status(200).json(
+            // guides
+            guides.map((guide) => ({
+                "username": guide.user_username,
+                "guide_id": guide.guide_id,
+                "guide_img": (guide.guide_img != null) ? Buffer.from(guide.guide_img).toString : null,
+                "guide_convinces": guide.guide_convinces,
+                "guide_languages": guide.guide_languages,
+                "guide_point": guide.guide_point,
+            }))
+        );
 
     } catch (error) {
         logging.error(NAMESPACE, error.message, error);

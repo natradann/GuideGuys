@@ -3,7 +3,7 @@ import 'dart:convert';
 class GuideModel {
   late String guideId;
   late String guideName;
-  late String guideImgPath;
+  late String? guideImg;
   late List<String> convinces;
   late List<String> languages;
   late double ratePoint;
@@ -11,7 +11,7 @@ class GuideModel {
   GuideModel({
     required this.guideId,
     required this.guideName,
-    this.guideImgPath = "assets/images/blank-profile-picture.png",
+    this.guideImg,
     required this.convinces,
     required this.languages,
     required this.ratePoint,
@@ -21,7 +21,8 @@ class GuideModel {
     try {
       GuideModel guide = GuideModel(
         guideId: json['guide_id'],
-        guideName: json['user_username'],
+        guideName: json['username'],
+        guideImg: (json['guide_img'] != null) ? json['guide_img'] : null ,
         convinces: (jsonDecode(json['guide_convinces']) as List<dynamic>)
             .map<String>((convince) => convince.toString())
             .toList(),
@@ -41,7 +42,7 @@ class GuideModel {
 class TourModel {
   late String tourId;
   late String tourName;
-  late String tourImgPath;
+  late String? tourImgPath;
   late List<String> convinces;
   late List<String> vehicles;
   late List<String> languages;
@@ -52,7 +53,7 @@ class TourModel {
   TourModel({
     required this.tourId,
     required this.tourName,
-    this.tourImgPath = "assets/images/blank-profile-picture.png",
+    this.tourImgPath,
     required this.convinces,
     required this.vehicles,
     required this.languages,
@@ -66,6 +67,7 @@ class TourModel {
       TourModel tour = TourModel(
         tourId: json['tour_id'].toString(),
         tourName: json['tour_name'],
+        tourImgPath: json['tour_img'],
         convinces: (jsonDecode(json['tour_convinces']) as List<dynamic>)
             .map<String>((convince) => convince.toString())
             .toList(),

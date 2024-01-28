@@ -7,8 +7,7 @@ import 'package:http/http.dart' as http;
 
 class RegisterService implements RegisterServiceInterface {
   @override
-  Future<String> createAccount({required RegisterModel regisInfo}) async {
-    String ip = localhostIp;
+  Future<ResponseRegisterModel> createAccount({required RegisterModel regisInfo}) async {
     http.Response response = await http.post(
       Uri.parse("$ngrokLink/users/register"),
       headers: {'Content-Type': 'application/json'},
@@ -16,7 +15,7 @@ class RegisterService implements RegisterServiceInterface {
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body)["token"];
+      return responseRegisterModelFromJson(response.body);
     } else if (response.statusCode == 401) {
       throw Exception('User already exists');
     } else if (response.statusCode == 402) {

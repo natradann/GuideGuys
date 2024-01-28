@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:guideguys/local_storage/secure_storage.dart';
 import 'package:guideguys/modules/my_tour_list/my_tour_list_model.dart';
 import 'package:guideguys/services/ip_for_connect.dart';
 import 'package:guideguys/services/my_tour_list_service/my_tour_list_service_interface.dart';
@@ -7,16 +8,16 @@ import 'package:http/http.dart' as http;
 
 class MyTourListService implements MyTourListServiceInterface {
   String ip = localhostIp;
-  String tokenText = token;
 
   @override
   Future<List<MyTourListModel>> fetchMyTourList() async {
+    String token = await SecureStorage().readSecureData('myToken');
     try {
       http.Response response = await http.get(
         Uri.parse('$ngrokLink/tours/get/tour/list'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $tokenText'
+          'Authorization': 'Bearer $token'
         },
       );
 

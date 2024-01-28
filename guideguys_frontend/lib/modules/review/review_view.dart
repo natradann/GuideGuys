@@ -39,6 +39,11 @@ class _ReviewViewState extends State<ReviewView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = screenWidth(context);
     double height = screenHeight(context);

@@ -12,6 +12,7 @@ import 'package:guideguys/modules/home/home_model.dart';
 import 'package:guideguys/modules/home/home_view_model.dart';
 import 'package:guideguys/modules/tour_detail/tour_detail_view.dart';
 import '../../models/tour_card_lg_model.dart';
+import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 
 double screenWidth(BuildContext context) {
   return MediaQuery.of(context).size.width;
@@ -28,7 +29,8 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeViewState extends State<HomeView>
+    with AutomaticKeepAliveClientMixin {
   late HomeViewModel _viewModel;
   late TextEditingController tagsController;
   late List<String> typeTourList;
@@ -36,16 +38,28 @@ class _HomeViewState extends State<HomeView> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     super.initState();
     _viewModel = HomeViewModel();
+    _viewModel.homeData = _viewModel.fetchAllInfo();
     tagsController = TextEditingController();
     typeTourList = [];
     typeVehicleList = [];
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    tagsController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     double width = screenWidth(context);
     double height = screenHeight(context);
     bool isTrue = false;
@@ -55,10 +69,12 @@ class _HomeViewState extends State<HomeView> {
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         backgroundColor: bgColor,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         endDrawer: ProfileMenu(width: width),
         body: FutureBuilder(
-          future: _viewModel.fetchAllInfo(),
+          future: _viewModel.homeData,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             try {
               if (snapshot.hasData) {
@@ -126,7 +142,7 @@ class _HomeViewState extends State<HomeView> {
                           return CardLG(
                             id: tour.tourId,
                             title: tour.tourName,
-                            imgPath: tour.tourImgPath,
+                            base64Image: tour.tourImgPath,
                             tagList: tour.convinces +
                                 tour.languages +
                                 tour.type +
@@ -218,20 +234,38 @@ class _HomeViewState extends State<HomeView> {
                       tagsController.clear();
                       setState(() {});
                     }
-                    print(_viewModel.tagList);
                   },
                 ),
               ),
               // filter button
-              SearchFilter(
-                checkValue: isTrue,
-                screenWidht: screenWidht,
-                typeTourList: _viewModel.typeTourList,
-                typeVehicleList: _viewModel.typeVehicleList,
-                onUpdate: () {
-                  _viewModel.onUpdateFilter(typeTour: _viewModel.typeTourList, typeVehicle: _viewModel.typeVehicleList);
+              IconButton(
+                onPressed: () {
+                  // print('typeList-1: $typeList');
+                  // print('tourTypeList-1: $typeTourList');
+                  filterOption(context);
+                  setState(() {});
                 },
+                alignment: Alignment.center,
+                padding: EdgeInsets.zero,
+                icon: Icon(
+                  Icons.filter_alt,
+                  color: Colors.grey[600],
+                ),
+                iconSize: screenWidht * 0.08,
               ),
+
+              // SearchFilter(
+              //   checkValue: isTrue,
+              //   screenWidht: screenWidht,
+              //   typeTourList: _viewModel.typeTourList,
+              //   typeVehicleList: _viewModel.typeVehicleList,
+              //   onUpdate: () {
+              //     _viewModel.onUpdateFilter(
+              //       typeTour: _viewModel.typeTourList,
+              //       typeVehicle: _viewModel.typeVehicleList,
+              //     );
+              //   },
+              // ),
             ],
           ),
           const SizedBox(height: 5),
@@ -286,6 +320,231 @@ class _HomeViewState extends State<HomeView> {
               : const SizedBox(),
         ],
       ),
+    );
+  }
+
+  Future<void> filterOption(
+    BuildContext context,
+    // bool isTrue,
+    // List<String> typeList,
+    // List<String> vehicleList,
+  ) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        late bool adventure = false;
+        late bool shopping = false;
+        late bool nature = false;
+        late bool culture = false;
+        late bool rural = false;
+        late bool darkTour = false;
+        late bool pubTrans = false;
+        late bool priCar = false;
+        late bool train = false;
+        late bool boat = false;
+        late bool walk = false;
+        for (String type in typeTourList) {
+          if (type == 'ผจญภัย') {
+            adventure = true;
+          } else if (type == 'ชอปปิง') {
+            shopping = true;
+          } else if (type == 'ธรรมชาติ') {
+            nature = true;
+          } else if (type == 'วัฒนธรรม ประวัติศาสตร์') {
+            culture = true;
+          } else if (type == 'ชนบท') {
+            rural = true;
+          } else if (type == 'Dark Tourism') {
+            darkTour = true;
+          }
+        }
+        for (String vehicle in typeVehicleList) {
+          if (vehicle == 'รถสาธารณะ') {
+            pubTrans = true;
+          } else if (vehicle == 'รถยนต์ส่วนตัว') {
+            priCar = true;
+          } else if (vehicle == 'รถไฟ') {
+            train = true;
+          } else if (vehicle == 'เรือ') {
+            boat = true;
+          } else if (vehicle == 'เดิน') {
+            walk = true;
+          }
+        }
+        return AlertDialog(
+          insetPadding: const EdgeInsets.all(10),
+          backgroundColor: bgColor,
+          contentPadding: const EdgeInsets.all(15),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'ประเภททัวร์',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                typeTourMultiSelect(
+                  adventure,
+                  shopping,
+                  nature,
+                  culture,
+                  rural,
+                  darkTour,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'ยานพาหนะ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                vehicleMultiSelect(
+                  priCar,
+                  pubTrans,
+                  train,
+                  boat,
+                  walk,
+                ),
+              ],
+            );
+          }),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                typeTourList = _viewModel.typeTourList;
+                typeVehicleList = _viewModel.typeVehicleList;
+
+                setState(() {});
+
+                Navigator.pop(context, 'Cancel');
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: textPurple),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                _viewModel.typeTourList = typeTourList;
+                _viewModel.typeVehicleList = typeVehicleList;
+                setState(() {});
+                Navigator.pop(context, 'OK');
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(color: textPurple),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  MultiSelectContainer<String> vehicleMultiSelect(
+    bool priCar,
+    bool pubTrans,
+    bool train,
+    bool boat,
+    bool walk,
+  ) {
+    return MultiSelectContainer(
+      itemsDecoration: MultiSelectDecorations(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: white,
+          border: Border.all(color: yellow),
+        ),
+        selectedDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: yellow,
+          border: Border.all(color: yellow),
+        ),
+      ),
+      items: [
+        MultiSelectCard(
+            value: 'รถยนต์ส่วนตัว', label: 'รถยนต์ส่วนตัว', selected: priCar),
+        MultiSelectCard(
+            value: 'รถสาธารณะ', label: 'รถสาธารณะ', selected: pubTrans),
+        MultiSelectCard(
+          value: 'รถไฟ',
+          label: 'รถไฟ',
+          selected: train,
+        ),
+        MultiSelectCard(
+          value: 'เรือ',
+          label: 'เรือ',
+          selected: boat,
+        ),
+        MultiSelectCard(
+          value: 'เดิน',
+          label: 'เดิน',
+          selected: walk,
+        ),
+      ],
+      onChange: (allSelectedItems, selectedItem) {
+        typeVehicleList = allSelectedItems;
+      },
+    );
+  }
+
+  MultiSelectContainer<String> typeTourMultiSelect(
+    bool adventure,
+    bool shopping,
+    bool nature,
+    bool culture,
+    bool rural,
+    bool darkTour,
+  ) {
+    return MultiSelectContainer(
+      itemsDecoration: MultiSelectDecorations(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: white,
+          border: Border.all(color: yellow),
+        ),
+        selectedDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: yellow,
+          border: Border.all(color: yellow),
+        ),
+      ),
+      items: [
+        MultiSelectCard(
+          value: 'ผจญภัย',
+          label: 'ผจญภัย',
+          selected: adventure,
+        ),
+        MultiSelectCard(
+          value: 'ชอปปิง',
+          label: 'ชอปปิง',
+          selected: shopping,
+        ),
+        MultiSelectCard(
+          value: 'ธรรมชาติ',
+          label: 'ธรรมชาติ',
+          selected: nature,
+        ),
+        MultiSelectCard(
+          value: 'วัฒนธรรม ประวัติศาสตร์',
+          label: 'วัฒนธรรม ประวัติศาสตร์',
+          selected: culture,
+        ),
+        MultiSelectCard(
+          value: 'ชนบท',
+          label: 'ชนบท',
+          selected: rural,
+        ),
+        MultiSelectCard(
+            value: 'Dark Tourism', label: 'Dark Tourism', selected: darkTour),
+      ],
+      onChange: (allSelectedItems, selectedItem) {
+        setState(() {
+          typeTourList = allSelectedItems;
+        });
+      },
     );
   }
 }

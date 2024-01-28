@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/custom_appbar.dart';
 import 'package:guideguys/components/profile_menu.dart';
@@ -5,11 +6,12 @@ import 'package:guideguys/components/purple_white_pair_button.dart';
 import 'package:guideguys/components/textfield_sm.dart';
 import 'package:guideguys/constants/colors.dart';
 import 'package:guideguys/constants/text_styles.dart';
-import 'package:guideguys/modules/create_tour/components/dropdown_multiselect.dart';
+import 'package:guideguys/modules/create_tour/components/custom_dropdown_multiselect.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:guideguys/modules/create_tour/create_tour_view_model.dart';
 import 'package:guideguys/modules/my_tour_list/my_tour_list_view.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 
 double screenWidth(BuildContext context) {
   return MediaQuery.of(context).size.width;
@@ -27,6 +29,7 @@ class CreateTourView extends StatefulWidget {
 }
 
 class _CreateTourViewState extends State<CreateTourView> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   late CreateTourViewModel _viewModel;
   final _tourTypeBuilderKey = GlobalKey<DropdownSearchState<String>>();
   final _convinceBuilderKey = GlobalKey<DropdownSearchState<String>>();
@@ -37,6 +40,30 @@ class _CreateTourViewState extends State<CreateTourView> {
   late List<String> tourTypeSelected;
   late List<String> convinceSelected;
   late List<String> vehicleSelected;
+  Uint8List? image;
+  String? imageName;
+
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    try {
+      final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 20,
+      );
+
+      if (pickedFile != null) {
+        final imageBytes = await pickedFile.readAsBytes();
+        final imageFileName = path.basename(pickedFile.path);
+
+        setState(() {
+          image = imageBytes;
+          imageName = imageFileName;
+        });
+      }
+    } catch (e) {
+      print("Error picking image: $e");
+    }
+  }
 
   @override
   void initState() {
@@ -51,36 +78,25 @@ class _CreateTourViewState extends State<CreateTourView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    tourName.dispose();
+    tourDetail.dispose();
+    tourPrice.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = screenWidth(context);
     double height = screenHeight(context);
-    XFile? image;
-    final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-    Future<void> pickImage() async {
-      final ImagePicker picker = ImagePicker();
-      XFile? pickedFile;
-
-      try {
-        pickedFile = await picker.pickImage(source: ImageSource.gallery);
-      } catch (e) {
-        print("Error picking image: $e");
-      }
-
-      if (pickedFile != null) {
-        print('not null');
-        setState(() {
-          image = pickedFile;
-        });
-      }
-    }
-
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         backgroundColor: bgColor,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         endDrawer: ProfileMenu(width: width),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -108,19 +124,22 @@ class _CreateTourViewState extends State<CreateTourView> {
                           pfIcon: IconButton(
                             icon: const Icon(Icons.add_a_photo_outlined),
                             color: grey500,
-                            onPressed: pickImage,
+                            onPressed: () async {
+                              pickImage();
+                            },
                           ),
                           inputType: TextInputType.none,
-                          textController: TextEditingController(),
+                          textController:
+                              TextEditingController(text: imageName),
                           inputAction: TextInputAction.next,
                         ),
                         CustomDropdownMultiSelect(
-                          labelTitle: 'ประเภททัวร์',
+                          labelTitle: 'ประเภททัวร์นำเที่ยว',
                           primaryColor: yellow,
                           isCreate: tourTypeSelected.isEmpty,
                           value: tourTypeSelected,
                           choiceItemList: _viewModel.tourTypes,
-                          hintText: 'เลือกจังหวัด',
+                          hintText: 'เลือกประเภทการนำเที่ยว',
                           updateValueCallback: ({required List<String> value}) {
                             tourTypeSelected = value;
                           },
@@ -180,6 +199,7 @@ class _CreateTourViewState extends State<CreateTourView> {
                           purpleButtonFn: () async {
                             bool isCreateTour = await _viewModel.createNewTour(
                               tourName: tourName.text,
+                              imageFile: image!,
                               tourType: tourTypeSelected,
                               convinces: convinceSelected,
                               vehicles: vehicleSelected,

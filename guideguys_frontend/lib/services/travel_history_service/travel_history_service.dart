@@ -10,7 +10,7 @@ class TravelHistoryService implements TravelHistoryServiceInterface {
 
   @override
   Future<List<TravelHistoryModel>> fetchTravelHistory() async {
-    String token = await SecureStorage().readSecureData('token');
+    String token = await SecureStorage().readSecureData('myToken');
     try {
       http.Response response = await http.get(
         Uri.parse('$ngrokLink/history/get/all'),

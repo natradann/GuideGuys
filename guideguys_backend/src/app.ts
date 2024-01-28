@@ -9,10 +9,12 @@ import RateRoutes from './routes/rate.route';
 import HistoryRoutes from './routes/history.route';
 import ChatRoutes from './routes/chat.route';
 import MessageRoutes from './routes/message.route';
+import PaymentRoutes from './routes/payment.route';
 import {ServerToClientEvents, ClientToServerEvents, InterServerEvents, SocketData} from './interfaces/message';
 import { Server, Socket } from 'socket.io';
 import http from 'http';
 import cors from 'cors';
+const bodyParser = require('body-parser');
 
 // const io = new Server<
 // ClientToServerEvents,
@@ -45,6 +47,8 @@ export class App{
         this.app = express();
         this.app.use(express.json());
         this.app.use(cors());
+        this.app.use(bodyParser.json({ limit: '50mb' }));
+        this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
         
         this.server = http.createServer(this.app);
         
@@ -71,11 +75,11 @@ export class App{
                     "comment_date": data.comment_date,
                 }
                 console.log(message)
-                // Broadcast the message to all connected clients
                 this.io.to(data.chatRoom).emit('newMessage', message);
             });
             
             socket.on('disconnect', () => {
+                socket.disconnect();
                 console.log("disconnect to socket");
             })
         });
@@ -109,6 +113,7 @@ export class App{
         this.app.use('/history', HistoryRoutes);
         this.app.use('/chats', ChatRoutes);
         this.app.use('/messages', MessageRoutes);
+        this.app.use('/payments', PaymentRoutes);
     }
 
     async start() {

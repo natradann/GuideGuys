@@ -8,14 +8,21 @@ class ChatRoomListViewModel {
   ChatRoomListServiceInterface service = ChatRoomListService();
   late String userId;
   late List<ChatRoomListModel> chatRoomList;
+  late Future<ChatRoomListData> roomListData;
 
-  Future<bool> readAllChatRoomInfo() async {
+  Future<ChatRoomListData> readAllChatRoomInfo() async {
     try {
-      userId = await SecureStorage().readSecureData('userId');
+      userId = await SecureStorage().readSecureData('myUserId');
       chatRoomList = await service.fetchAllChatRoom();
-      return true;
+      return ChatRoomListData(roomListData: chatRoomList);
     } catch (_) {
       rethrow;
     }
   }
+}
+
+class ChatRoomListData {
+  List<ChatRoomListModel> roomListData;
+
+  ChatRoomListData({required this.roomListData});
 }

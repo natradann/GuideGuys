@@ -40,7 +40,7 @@ class _FindGuieViewState extends State<FindAllListView> {
   late TextEditingController tagsController;
   late List<String> typeTourList;
   late List<String> typeVehicleList;
-   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -52,6 +52,12 @@ class _FindGuieViewState extends State<FindAllListView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    tagsController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = screenWidth(context);
     double height = screenHeight(context);
@@ -59,7 +65,9 @@ class _FindGuieViewState extends State<FindAllListView> {
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         backgroundColor: bgColor,
         endDrawer: ProfileMenu(width: width),
         body: Column(
@@ -87,7 +95,7 @@ class _FindGuieViewState extends State<FindAllListView> {
                           // model: tour,
                           id: tour.tourId,
                           title: tour.tourName,
-                          imgPath: tour.tourImgPath,
+                          base64Image: tour.tourImgPath,
                           tagList: tour.convinces +
                               tour.languages +
                               tour.type +
@@ -120,7 +128,7 @@ class _FindGuieViewState extends State<FindAllListView> {
                           // model: guide,
                           id: guide.guideId,
                           title: guide.guideName,
-                          imgPath: guide.guideImgPath,
+                          base64Image: guide.guideImg,
                           tagList: guide.convinces + guide.languages,
                           ratePoint: guide.ratePoint,
                           screenHeight: height,
@@ -175,7 +183,6 @@ class _FindGuieViewState extends State<FindAllListView> {
                 screenWidht: width,
                 typeTourList: typeTourList,
                 typeVehicleList: typeVehicleList,
-                
               ),
             ],
           ),

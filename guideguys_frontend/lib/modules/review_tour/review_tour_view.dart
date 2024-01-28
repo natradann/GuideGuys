@@ -34,7 +34,7 @@ class _ReviewTourViewState extends State<ReviewTourView> {
   late ReviewTourViewModel _viewModel;
   late int starPoint;
   late TextEditingController commentTour;
-   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -42,6 +42,12 @@ class _ReviewTourViewState extends State<ReviewTourView> {
     _viewModel = ReviewTourViewModel();
     starPoint = 0;
     commentTour = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    commentTour.dispose();
   }
 
   @override
@@ -53,7 +59,9 @@ class _ReviewTourViewState extends State<ReviewTourView> {
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         backgroundColor: bgColor,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

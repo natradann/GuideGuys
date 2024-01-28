@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:guideguys/modules/create_tour/create_tour_model.dart';
 import 'package:guideguys/services/create_tour_service/create_tour_service.dart';
 import 'package:guideguys/services/create_tour_service/create_tour_service_interface.dart';
@@ -21,16 +23,19 @@ class CreateTourViewModel {
     "รถไฟ",
   ];
 
-  Future<bool> createNewTour(
-      {required String tourName,
-      required List<String> tourType,
-      required List<String> convinces,
-      required List<String> vehicles,
-      required String tourDetail,
-      required String price}) async {
+  Future<bool> createNewTour({
+    required String tourName,
+    required Uint8List imageFile,
+    required List<String> tourType,
+    required List<String> convinces,
+    required List<String> vehicles,
+    required String tourDetail,
+    required String price,
+  }) async {
     try {
       newTour = CreateTourModel(
         tourName: tourName,
+        base64Image: base64Encode(imageFile),
         convinces: convinces,
         vehicle: vehicles,
         tourType: tourType,

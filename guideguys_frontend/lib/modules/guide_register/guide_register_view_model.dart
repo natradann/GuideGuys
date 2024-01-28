@@ -5,8 +5,16 @@ import 'package:textfield_tags/textfield_tags.dart';
 
 class GuideRegisterViewModel {
   GuideRegisterServiceInterface service = GuideRegisterService();
+  List<String> convinces = [
+    "กรุงเทพ",
+    "สมุทรปราการ",
+    "นนทบุรี",
+    "ปทุมธานี",
+    "สระบุรี",
+  ];
 
   GuideRegisterModel newGuideInfo = GuideRegisterModel(
+    base64GuideImage: '',
     guideCardNumber: '',
     guideCardType: '',
     expiredDate: DateTime.now(),
@@ -24,6 +32,7 @@ class GuideRegisterViewModel {
       required String experience}) async {
     try {
       newGuideInfo = GuideRegisterModel(
+        base64GuideImage: '',
         guideCardNumber: cardNo,
         guideCardType: cardType,
         expiredDate: expiredDate,

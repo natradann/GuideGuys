@@ -50,9 +50,9 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
                         });
                     } else if (token) {
                         return res.status(200).json({
-                            message: 'Auth Successful',
-                            token,
-                            userSaved
+                            token: token,
+                            user_id: userSaved.id,
+                            username: userSaved.username,
                         });
                     }
                 });
@@ -71,6 +71,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const usersRepository = AppDataSource.getRepository(User);
         const userMatch = await usersRepository.createQueryBuilder("user")
+        .leftJoinAndSelect("user.guide", "guide")
         .where("user.username = :username", {username: username})
         .orWhere("user.email = :email", {email: username})
         .getOne()
@@ -99,6 +100,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
                         token: token,
                         user_id: userMatch.id,
                         username: userMatch.username,
+                        guide_id: (userMatch.guide != null) ? userMatch.guide.id : null,
                     });
                 }
             });

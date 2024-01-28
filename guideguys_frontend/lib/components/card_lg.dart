@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/star_rate.dart';
 import 'package:guideguys/components/tag_in_card.dart';
@@ -8,7 +11,7 @@ class CardLG extends StatelessWidget {
     // required this.model,
     required this.id,
     required this.title,
-    required this.imgPath,
+    this.base64Image,
     required this.tagList,
     this.price,
     required this.ratePoint,
@@ -21,7 +24,7 @@ class CardLG extends StatelessWidget {
   // final TourCardLGModel model;
   final String id;
   final String title;
-  final String imgPath;
+  final String? base64Image;
   final List<String> tagList;
   final double? price;
   final double ratePoint;
@@ -58,8 +61,15 @@ class CardLG extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  (base64Image != null) ?
+                  Image.memory(
+                    base64Decode(base64Image!),
+                    height: cardHeight * 0.56,
+                    width: screenWidth,
+                    fit: BoxFit.cover,
+                  ) :
                   Image.asset(
-                    imgPath,
+                    "assets/images/blank-profile-picture.png",
                     height: cardHeight * 0.56,
                     width: screenWidth,
                     fit: BoxFit.cover,

@@ -1,10 +1,35 @@
 import 'dart:convert';
 
-ChatModel chatFromJson(String str) => ChatModel.fromJson(json.decode(str));
+ChatModel chatModelFromJson(String str) => ChatModel.fromJson(json.decode(str));
 
-String chatToJson(ChatModel data) => json.encode(data.toJson());
+String chatModelToJson(ChatModel data) => json.encode(data.toJson());
 
 class ChatModel {
+  String roomId;
+  String receiverUsername;
+
+  ChatModel({
+    required this.roomId,
+    required this.receiverUsername,
+  });
+
+  factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
+        roomId: json["room_id"].toString(),
+        receiverUsername: json["receiver_username"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "room_id": roomId,
+        "receiver_username": receiverUsername,
+      };
+}
+
+WaitingConfirmCardModel waitingConfirmCardFromJson(String str) =>
+    WaitingConfirmCardModel.fromJson(json.decode(str));
+
+String waitingConfirmCardToJson(WaitingConfirmCardModel data) => json.encode(data.toJson());
+
+class WaitingConfirmCardModel {
   int historyId;
   String status;
   String tourName;
@@ -14,7 +39,7 @@ class ChatModel {
   DateTime endDate;
   int price;
 
-  ChatModel({
+  WaitingConfirmCardModel({
     required this.historyId,
     required this.status,
     required this.tourName,
@@ -25,7 +50,8 @@ class ChatModel {
     required this.price,
   });
 
-  factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
+  factory WaitingConfirmCardModel.fromJson(Map<String, dynamic> json) =>
+      WaitingConfirmCardModel(
         historyId: json["historyId"],
         status: json["status"],
         tourName: json["tourName"],

@@ -8,7 +8,7 @@ class ChatRoomListService implements ChatRoomListServiceInterface {
   String ip = localhostIp;
   @override
   Future<List<ChatRoomListModel>> fetchAllChatRoom() async {
-    String userId = await SecureStorage().readSecureData('userId');
+    String userId = await SecureStorage().readSecureData('myUserId');
     try {
       http.Response response = await http.get(
         Uri.parse('$ngrokLink/chats/get/all/chatRoom/$userId'),

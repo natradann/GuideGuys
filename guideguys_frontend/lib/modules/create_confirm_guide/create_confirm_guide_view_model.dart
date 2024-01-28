@@ -17,7 +17,7 @@ class CreateConfirmGuideViewModel {
     plan: '',
     aptDate: DateTime.now(),
     aptPlace: '',
-    status: 'waiting for confirm',
+    status: '0',
   );
 
   Iterable<TourModel> filterTour(String text) {

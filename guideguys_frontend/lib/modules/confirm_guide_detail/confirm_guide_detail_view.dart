@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:guideguys/components/profile_menu.dart';
 import 'package:guideguys/components/purple_white_pair_button.dart';
 import 'package:guideguys/components/custom_appbar.dart';
+import 'package:guideguys/components/tour_history_card.dart';
 import 'package:guideguys/constants/colors.dart';
 import 'package:guideguys/constants/text_styles.dart';
 import 'package:guideguys/modules/confirm_guide_detail/confirm_guide_detail_view_model.dart';
@@ -32,12 +32,17 @@ class ConfirmGuideDetailView extends StatefulWidget {
 
 class _ConfirmGuideDetailViewState extends State<ConfirmGuideDetailView> {
   late ConfirmGuideDetailViewModel _viewModel;
-   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     _viewModel = ConfirmGuideDetailViewModel();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -48,7 +53,9 @@ class _ConfirmGuideDetailViewState extends State<ConfirmGuideDetailView> {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: bgColor,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         endDrawer: ProfileMenu(width: width),
         body: FutureBuilder(
           future:
@@ -62,6 +69,15 @@ class _ConfirmGuideDetailViewState extends State<ConfirmGuideDetailView> {
                       padding: const EdgeInsets.only(bottom: 30),
                       child: Column(
                         children: [
+                          TourHistoryCard(
+                            tourName: _viewModel.formDetail.tourName,
+                            guideName: _viewModel.formDetail.guideName,
+                            startDate: _viewModel.formDetail.startDate,
+                            endDate: _viewModel.formDetail.endDate,
+                            price: _viewModel.formDetail.price,
+                            screenWidth: width,
+                            onPressed: () {},
+                          ),
                           upperComfirmDetail(width),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -114,8 +130,11 @@ class _ConfirmGuideDetailViewState extends State<ConfirmGuideDetailView> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              const PaymentView(),
+                                          builder: (context) => PaymentView(
+                                            historyId: widget.historyId,
+                                            // receiverId: widget.receiverId!,
+                                            // receiverUsername: widget.receiverUsername,
+                                          ),
                                         ),
                                       );
                                     },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guideguys/components/confirm_popup.dart';
 import 'package:guideguys/constants/colors.dart';
 import 'package:guideguys/constants/text_styles.dart';
 import 'package:guideguys/modules/guide_register/guide_register_view.dart';
@@ -30,6 +31,18 @@ class _RegisterViewState extends State<RegisterView> {
   void initState() {
     super.initState();
     _viewModel = RegisterViewModel();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    usernameText.dispose();
+    emailText.dispose();
+    passwordText.dispose();
+    confirmPasswordText.dispose();
+    firstNameText.dispose();
+    lastNameText.dispose();
+    phoneNumberText.dispose();
   }
 
   @override
@@ -129,46 +142,54 @@ class _RegisterViewState extends State<RegisterView> {
     return Column(
       children: [
         TextButton(
-          onPressed: () async {
-            try {
-              // String registerResponse = await _viewModel.onCreateAccount(
-              //   username: usernameText.text,
-              //   email: emailText.text,
-              //   password: passwordText.text,
-              //   firstName: firstNameText.text,
-              //   lastName: lastNameText.text,
-              //   phoneNumber: phoneNumberText.text,
-              // );
-              if (!mounted) return;
-              if (isCheckedT) {
-                // print(registerResponse);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const HomeView(),
-                  ),
-                );
-              } else if (isCheckedG) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        const GuideRegisterView(),
-                  ),
-                );
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    padding: EdgeInsets.all(20),
-                    backgroundColor: grey500,
-                    content: Text('โปรดเลือกบทบาทการสมัคร'),
-                  ),
-                );
-              }
-            } catch (_) {
-              rethrow;
-            }
-          },
+          onPressed: () => showDialog(
+            context: context,
+            builder: (BuildContext context) => ConfirmPopup(
+              onCancel: () {
+                Navigator.pop(context);
+              },
+              onConfirm: () async {
+                try {
+                  bool registerResponse = await _viewModel.onCreateAccount(
+                    username: usernameText.text,
+                    email: emailText.text,
+                    password: passwordText.text,
+                    firstName: firstNameText.text,
+                    lastName: lastNameText.text,
+                    phoneNumber: phoneNumberText.text,
+                  );
+                  if (!mounted) return;
+                  if (isCheckedT) {
+                    // print(registerResponse);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => const HomeView(),
+                      ),
+                    );
+                  } else if (isCheckedG) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const GuideRegisterView(),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        padding: EdgeInsets.all(20),
+                        backgroundColor: grey500,
+                        content: Text('โปรดเลือกบทบาทการสมัคร'),
+                      ),
+                    );
+                  }
+                } catch (_) {
+                  rethrow;
+                }
+              },
+            ),
+          ),
           style: TextButton.styleFrom(
             backgroundColor: bgPurple,
             foregroundColor: white,

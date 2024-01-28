@@ -4,7 +4,7 @@ import 'package:guideguys/components/profile_menu.dart';
 import 'package:guideguys/constants/colors.dart';
 import 'package:guideguys/modules/confirm_guide_detail/confirm_guide_detail_view.dart';
 import 'package:guideguys/modules/review_tour/review_tour_view.dart';
-import 'package:guideguys/modules/travel_history/components/tour_history_card.dart';
+import 'package:guideguys/components/tour_history_card.dart';
 import 'package:guideguys/modules/travel_history/travel_history_model.dart';
 import 'package:guideguys/modules/travel_history/travel_history_view_mdel.dart';
 
@@ -34,6 +34,11 @@ class _TravelHistoryViewState extends State<TravelHistoryView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = screenWidth(context);
     double height = screenHeight(context);
@@ -41,7 +46,9 @@ class _TravelHistoryViewState extends State<TravelHistoryView> {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: bgColor,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         endDrawer: ProfileMenu(width: width),
         body: FutureBuilder(
             future: _viewModel.fetchTrevelHistory(),

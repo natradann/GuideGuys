@@ -21,10 +21,7 @@ class ChatRoomCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ChatView(
-              guideId: 'cb622bdc-582d-461a-867b-3113c96add5c',
-              receiverUsername: (userId == model.user1Id)
-                  ? model.user2Username
-                  : model.user1Username,
+              guideId: (userId == model.user1Id) ? model.user2Id : model.user1Id,
               receiverId:
                   (userId == model.user1Id) ? model.user2Id : model.user1Id,
               role: 'guide',
@@ -61,13 +58,14 @@ class ChatRoomCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                Text(model.lastMsg.msgText),
+                Text((model.lastMsg.msgText != null) ? model.lastMsg.msgText! : ''),
               ],
             ),
             const Spacer(),
+            (model.lastMsg.commentDate != null) ?
             Text(
-              DateFormat('hh:mm a').format(model.lastMsg.commentDate),
-            ),
+              DateFormat('hh:mm a').format(model.lastMsg.commentDate!),
+            ) : const Spacer(),
           ],
         ),
       ),
