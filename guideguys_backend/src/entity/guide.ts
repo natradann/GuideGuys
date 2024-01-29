@@ -13,9 +13,9 @@ export class Guide {
 
     @Column({nullable: false})
     type: string
-    
+
     @Column({type: "longblob", nullable: true})
-    img: Buffer
+    card_img: Buffer
 
     @Column({type: "datetime"})
     card_expired: string
@@ -39,8 +39,8 @@ export class Guide {
     user: User
 
     @OneToMany(() => Tour, (tour) => tour.guide)
-    tour: Tour
+    tour: Tour[]
 
     @OneToMany(() => History, (history) => history.guide)
-    history: History
+    history: History[]
 }

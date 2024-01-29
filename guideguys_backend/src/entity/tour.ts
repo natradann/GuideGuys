@@ -40,8 +40,8 @@ export class Tour {
     created_at: string 
     
     @OneToMany(() => Rate, (rate) => rate.tour_id)
-    rate: Rate
+    rate: Rate[]
 
     @OneToMany(() => History, (history) => history.tour)
-    history: History
+    history: History[]
 }

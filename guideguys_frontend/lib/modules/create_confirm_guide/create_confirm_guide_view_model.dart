@@ -1,3 +1,4 @@
+import 'package:guideguys/local_storage/secure_storage.dart';
 import 'package:guideguys/modules/create_confirm_guide/create_confirm_guide_model.dart';
 import 'package:guideguys/services/create_confirm_guide_service/create_confirm_guide_service.dart';
 import 'package:guideguys/services/create_confirm_guide_service/create_confirm_guide_service_interface.dart';
@@ -5,8 +6,9 @@ import 'package:guideguys/services/create_confirm_guide_service/create_confirm_g
 class CreateConfirmGuideViewModel {
   CreateConFirmGuideServiceInterface service = CreateConfirmGuideService();
   late GuideInfoModel guideInfo;
+  late Future<GuideInfoModel> guideInfoData;
   CreateConfirmGuideModel confirmForm = CreateConfirmGuideModel(
-    tourId: '',
+    tourId: null,
     tourName: '',
     customerId: 'customerId',
     guideId: 'guidId',
@@ -21,6 +23,7 @@ class CreateConfirmGuideViewModel {
   );
 
   Iterable<TourModel> filterTour(String text) {
+    confirmForm.tourName = text;
     if (text == '') {
       return guideInfo.tour;
     }
@@ -60,16 +63,18 @@ class CreateConfirmGuideViewModel {
   //   }
   // }
 
-  Future<bool> fetchGuideInfo() async {
+  Future<void> fetchGuideInfo() async {
     try {
-      guideInfo = await service.fetchGuideInfoForConfirmForm();
-      return true;
+      guideInfoData = service.fetchGuideInfoForConfirmForm();
+      guideInfo = await guideInfoData;
     } catch (_) {
       rethrow;
     }
   }
 
   Future<bool> createConfirmForm() async {
+    String myGuideId = await SecureStorage().readSecureData('myGuideId');
+    confirmForm.guideId = myGuideId;
     try {
       await service.createForm(confirmForm: confirmForm);
       return true;

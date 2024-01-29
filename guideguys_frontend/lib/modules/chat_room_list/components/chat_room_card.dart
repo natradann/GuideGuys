@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:guideguys/modules/chat/chat_view.dart';
 import 'package:guideguys/modules/chat_room_list/chat_room_list_model.dart';
@@ -21,7 +23,6 @@ class ChatRoomCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ChatView(
-              guideId: (userId == model.user1Id) ? model.user2Id : model.user1Id,
               receiverId:
                   (userId == model.user1Id) ? model.user2Id : model.user1Id,
               role: 'guide',
@@ -31,13 +32,13 @@ class ChatRoomCard extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-
         child: Row(
           children: [
-            const CircleAvatar(
-              backgroundImage:
-                  AssetImage('assets/images/blank-profile-picture.png'),
-                  radius: 25,
+            CircleAvatar(
+              backgroundImage: (model.receiverImage != null)
+                  ? Image.memory(base64Decode(model.receiverImage!)).image
+                  : const AssetImage('assets/images/blank-profile-picture.png'),
+              radius: 25,
             ),
             const SizedBox(width: 20),
             Column(
@@ -58,14 +59,17 @@ class ChatRoomCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                Text((model.lastMsg.msgText != null) ? model.lastMsg.msgText! : ''),
+                Text((model.lastMsg.msgText != null)
+                    ? model.lastMsg.msgText!
+                    : ''),
               ],
             ),
             const Spacer(),
-            (model.lastMsg.commentDate != null) ?
-            Text(
-              DateFormat('hh:mm a').format(model.lastMsg.commentDate!),
-            ) : const Spacer(),
+            (model.lastMsg.commentDate != null)
+                ? Text(
+                    DateFormat('hh:mm a').format(model.lastMsg.commentDate!),
+                  )
+                : const Spacer(),
           ],
         ),
       ),

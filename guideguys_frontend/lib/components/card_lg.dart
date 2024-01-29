@@ -26,7 +26,7 @@ class CardLG extends StatelessWidget {
   final String title;
   final String? base64Image;
   final List<String> tagList;
-  final double? price;
+  final int? price;
   final double ratePoint;
   final double screenHeight;
   final double screenWidth;

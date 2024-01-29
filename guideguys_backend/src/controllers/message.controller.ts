@@ -8,7 +8,7 @@ const NAMESPACE = 'Message';
 const saveNewMessage = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let newMessage = req.body;
-
+        
         const messageRepository = AppDataSource.getRepository(Message);
         const resBody = await messageRepository.save({
             'chat': newMessage.chatRoom,

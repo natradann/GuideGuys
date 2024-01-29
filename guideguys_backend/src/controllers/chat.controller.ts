@@ -102,8 +102,10 @@ const getAllChatRoom = async (req: Request, res: Response, next:NextFunction) =>
             "chat.room_id",
             "user1.id", 
             "user1.username", 
+            "user1.img",
             "user2.id", 
             "user2.username", 
+            "user2.img",
             "message",
         ])
         .where('user1.id = :userId', {userId: req.params.userId})
@@ -118,6 +120,9 @@ const getAllChatRoom = async (req: Request, res: Response, next:NextFunction) =>
                 "user1_username": chatRoom.user1.username,
                 "user2_id": chatRoom.user2.id,
                 "user2_username": chatRoom.user2.username,
+                "receiver_img": (chatRoom.user1.id == req.params.userId) ? 
+                (chatRoom.user2.img != null) ? Buffer.from(chatRoom.user2.img).toString('base64') : null
+                : (chatRoom.user1.img != null) ? Buffer.from(chatRoom.user1.img).toString('base64') : null,
                 "last_msg": chatRoom.message[0] ?? {}
             }))
         );

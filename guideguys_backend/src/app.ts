@@ -47,8 +47,8 @@ export class App{
         this.app = express();
         this.app.use(express.json());
         this.app.use(cors());
-        this.app.use(bodyParser.json({ limit: '50mb' }));
-        this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+        this.app.use(bodyParser.json({ limit: '200mb' }));
+        this.app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
         
         this.server = http.createServer(this.app);
         

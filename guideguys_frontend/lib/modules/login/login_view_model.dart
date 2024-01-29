@@ -9,15 +9,16 @@ class LoginViewModel {
   LoginModel userInfo = LoginModel(username: '', password: '');
 
   Future<bool> getToken({required LoginModel userInfo}) async {
-    LoginModel userInfo = LoginModel(username: 'natradann', password: 'hello123');
+    // LoginModel userInfo = LoginModel(username: 'natradann', password: 'hello123');
     try {
       ResponseLoginModel res = await service.vertifyAccount(userInfo: userInfo);
 
       SecureStorage().writeSecureData('myToken', res.token);
       SecureStorage().writeSecureData('myUserId', res.userId);
       SecureStorage().writeSecureData('myUsername', res.username);
+      SecureStorage().writeSecureData('myEmail', res.email);
       SecureStorage().writeSecureData('myGuideId', res.myGuideId ?? 'tourist');
-      
+
       return true;
     } catch (_) {
       rethrow;

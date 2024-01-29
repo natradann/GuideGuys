@@ -11,7 +11,7 @@ class GuideRegisterService implements GuideRegisterServiceInterface {
 
   @override
   Future<void> guideRegister({required GuideRegisterModel newGuide}) async {
-    String token = await SecureStorage().readSecureData('token');
+    String token = await SecureStorage().readSecureData('myToken');
     http.Response response = await http.post(
         Uri.parse("$ngrokLink/guides/register"),
         headers: {

@@ -13,6 +13,7 @@ class ChatRoomListModel {
   String user1Username;
   String user2Id;
   String user2Username;
+  String? receiverImage;
   LastMsg lastMsg;
 
   ChatRoomListModel({
@@ -21,6 +22,7 @@ class ChatRoomListModel {
     required this.user1Username,
     required this.user2Id,
     required this.user2Username,
+    this.receiverImage,
     required this.lastMsg,
   });
 
@@ -32,6 +34,7 @@ class ChatRoomListModel {
         user1Username: json["user1_username"],
         user2Id: json["user2_id"],
         user2Username: json["user2_username"],
+        receiverImage: (json['receiver_img'] != null) ? json['receiver_img'] : null,
         lastMsg: LastMsg.fromJson(json["last_msg"]),
       );
     } catch (error) {

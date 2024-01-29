@@ -87,13 +87,13 @@ class _HomeViewState extends State<HomeView>
                         isTrue: isTrue),
                     FindAllBar(
                       h: height,
-                      menu: "Guide",
+                      menu: "ไกด์นำเที่ยว",
                       action: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) => FindAllListView(
-                              pageTitle: 'Guides',
+                              pageTitle: 'ไกด์นำเที่ยว',
                               guideList: _viewModel.allGuides,
                             ),
                           ),
@@ -117,13 +117,13 @@ class _HomeViewState extends State<HomeView>
                     ),
                     FindAllBar(
                       h: height,
-                      menu: "Tour",
+                      menu: "โปรแกรมนำเที่ยว",
                       action: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) => FindAllListView(
-                              pageTitle: 'Tours',
+                              pageTitle: 'โปรแกรมนำเที่ยว',
                               tourList: _viewModel.allTours,
                             ),
                           ),

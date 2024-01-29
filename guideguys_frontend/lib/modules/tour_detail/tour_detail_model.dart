@@ -5,6 +5,7 @@ class TourDetailModel {
   late String tourName;
   late String? tourImage;
   late String username;
+  late String? guideImage;
   late String guideUserId;
   late String guideId;
   late List<String> languages;
@@ -12,7 +13,7 @@ class TourDetailModel {
   late List<String> vehicle;
   late List<String> type;
   late String tourDetail;
-  late double tourPrice;
+  late int tourPrice;
   late double tourPoint;
 
   TourDetailModel({
@@ -20,6 +21,7 @@ class TourDetailModel {
     required this.tourName,
     this.tourImage,
     required this.username,
+    this.guideImage,
     required this.guideUserId,
     required this.guideId,
     required this.languages,
@@ -38,6 +40,7 @@ class TourDetailModel {
         tourName: json['tour_name'],
         tourImage: (json['tour_img'] == null) ? null : json['tour_img'],
         username: json['user_username'],
+        guideImage: (json['guide_img'] != null) ? json['guide_img'] : null,
         guideUserId: json['user_id'],
         guideId: json['tour_guide_id'],
         languages: (jsonDecode(json['guide_languages']) as List<dynamic>)
@@ -53,7 +56,7 @@ class TourDetailModel {
             .map<String>((type) => type.toString())
             .toList(),
         tourDetail: json['tour_detail'],
-        tourPrice: json['tour_price'].toDouble(),
+        tourPrice: json['tour_price'],
         tourPoint: json['tour_point'].toDouble(),
       );
       return tourDetail;

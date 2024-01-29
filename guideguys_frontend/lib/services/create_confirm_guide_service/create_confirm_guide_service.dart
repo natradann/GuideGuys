@@ -36,11 +36,13 @@ class CreateConfirmGuideService implements CreateConFirmGuideServiceInterface {
   Future<void> createForm(
       {required CreateConfirmGuideModel confirmForm}) async {
     try {
+      print(createConfirmGuideModelToJson(confirmForm));
       http.Response response = await http.post(
         Uri.parse('$ngrokLink/history/create/form'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(confirmForm.toJson()),
+        body: createConfirmGuideModelToJson(confirmForm),
       );
+      print('fde');
       if (response.statusCode == 200) {
         return;
       } else if (response.statusCode == 500) {

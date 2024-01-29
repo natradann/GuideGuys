@@ -18,13 +18,13 @@ class LoginService implements LoginServiceInterface {
     if (response.statusCode == 200) {
       return responseLoginModelFromJson(response.body);
     } else if (response.statusCode == 401) {
-      throw Exception("Unable to Sign JWT or password not match");
+      throw "รหัสผ่านไม่ถูกต้อง";
     } else if (response.statusCode == 404) {
-      throw Exception("User not found");
+      throw "ไม่พพบผู้ใช้";
     } else if (response.statusCode == 500) {
-      throw Exception("Internal Server Error");
+      throw "Internal Server Error";
     } else {
-      throw Exception("Unknown Error");
+      throw "Unknown Error";
     }
   }
 }

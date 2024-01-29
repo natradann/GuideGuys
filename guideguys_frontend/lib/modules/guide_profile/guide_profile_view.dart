@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/custom_appbar.dart';
 import 'package:guideguys/components/profile_menu.dart';
@@ -33,7 +35,7 @@ class GuideProfileView extends StatefulWidget {
 
 class _GuideProfileViewState extends State<GuideProfileView> {
   late GuideProfileViewModel _viewModel;
-   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -54,7 +56,9 @@ class _GuideProfileViewState extends State<GuideProfileView> {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: bgColor,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         endDrawer: ProfileMenu(width: width),
         body: FutureBuilder(
           future: _viewModel.fetchGuideProfile(id: widget.guideId),
@@ -70,12 +74,20 @@ class _GuideProfileViewState extends State<GuideProfileView> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image.asset(
-                                _viewModel.guideProfile.guideImgPath,
-                                height: height * 0.3,
-                                width: width * 0.5,
-                                fit: BoxFit.cover,
-                              ),
+                              (_viewModel.guideProfile.guideImage != null)
+                                  ? Image.memory(
+                                      base64Decode(
+                                          _viewModel.guideProfile.guideImage!),
+                                      height: height * 0.3,
+                                      width: width * 0.5,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset(
+                                      "assets/images/blank-profile-picture.png",
+                                      height: height * 0.3,
+                                      width: width * 0.5,
+                                      fit: BoxFit.cover,
+                                    ),
                               rightInfomation()
                             ],
                           ),
@@ -133,7 +145,6 @@ class _GuideProfileViewState extends State<GuideProfileView> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChatView(
-                              guideId: _viewModel.guideProfile.guideId,
                               receiverId: _viewModel.guideProfile.guideUserId,
                               role: 'tourist',
                             ),
@@ -201,7 +212,9 @@ class _GuideProfileViewState extends State<GuideProfileView> {
             ),
             Row(
               children: [
-                StarRate(sizeStar: 20, pointRate: _viewModel.guideProfile.guidePoint),
+                StarRate(
+                    sizeStar: 20,
+                    pointRate: _viewModel.guideProfile.guidePoint),
                 const SizedBox(width: 10),
                 const Text('2 รีวิว'),
               ],

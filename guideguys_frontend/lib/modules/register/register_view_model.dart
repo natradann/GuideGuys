@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:guideguys/local_storage/secure_storage.dart';
 import 'package:guideguys/modules/register/register_model.dart';
 import 'package:guideguys/services/register_service/register_service.dart';
@@ -13,6 +16,7 @@ class RegisterViewModel {
     required String password,
     required String firstName,
     required String lastName,
+    required Uint8List userImage,
     required String phoneNumber,
   }) async {
     try {
@@ -22,6 +26,7 @@ class RegisterViewModel {
         password: password,
         firstName: firstName,
         lastName: lastName,
+        img: base64Encode(userImage),
         phoneNumber: phoneNumber,
       );
       ResponseRegisterModel res = await service.createAccount(regisInfo: userModel);

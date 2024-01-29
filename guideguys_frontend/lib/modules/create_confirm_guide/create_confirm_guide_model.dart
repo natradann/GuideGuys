@@ -3,10 +3,10 @@ import 'dart:convert';
 GuideInfoModel guideInfoModelFromJson(String str) => GuideInfoModel.fromJson(json.decode(str));
 
 String guideInfoModelToJson(GuideInfoModel data) => json.encode(data.toJson());
-
+String createConfirmGuideModelToJson(CreateConfirmGuideModel data) => json.encode(data.toJson());
 
 class CreateConfirmGuideModel {
-  late String tourId;
+  late String? tourId;
   late String tourName;
   late String customerId;
   late String guideId;
@@ -20,7 +20,7 @@ class CreateConfirmGuideModel {
   late String status;
 
   CreateConfirmGuideModel({
-    required this.tourId,
+    this.tourId,
     required this.tourName,
     required this.customerId,
     required this.guideId,
@@ -41,7 +41,7 @@ class CreateConfirmGuideModel {
     'guide': guideId,
     'start_date': startDate.toString(),
     'end_date': endDate.toString(),
-    'price': int.parse(price).toDouble(),
+    'price': int.parse(price),
     'headcount': int.parse(headCount),
     'plan': plan,
     'appointment_date': aptDate.toString(),

@@ -8,7 +8,7 @@ class TourCardLGModel {
   late List<String> vehicles;
   late List<String> languages;
   late List<String> type;
-  late double price;
+  late int price;
   late double ratePoint;
 
   TourCardLGModel({
@@ -41,7 +41,7 @@ class TourCardLGModel {
         type: (jsonDecode(json['tour_type']) as List<dynamic>)
             .map<String>((type) => type)
             .toList(),
-        price: json['tour_price'].toDouble(),
+        price: json['tour_price'],
         ratePoint: json['tour_point'].toDouble(),
       );
       return tour;

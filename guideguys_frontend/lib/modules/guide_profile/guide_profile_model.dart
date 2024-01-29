@@ -4,7 +4,7 @@ class GuideProfileModel {
   late String guideName;
   late String firstName;
   late String lastName;
-  late String guideImgPath;
+  late String? guideImage;
   late String guideCardNo;
   late String guideCardType;
   late DateTime cardExpired;
@@ -20,7 +20,7 @@ class GuideProfileModel {
     required this.guideName,
     required this.firstName,
     required this.lastName,
-    this.guideImgPath = "assets/images/blank-profile-picture.png",
+    this.guideImage,
     required this.guideCardNo,
     required this.guideCardType,
     required this.cardExpired,
@@ -39,6 +39,7 @@ class GuideProfileModel {
         guideName: json['username'],
         firstName: json['firstName'],
         lastName: json['lastName'],
+        guideImage: (json['guide_img'] != null) ? json['guide_img'] : null,
         guideCardNo: json['guideCardNo'],
         guideCardType: json['guideType'],
         cardExpired: DateTime.parse(json['guideCardExpired']),

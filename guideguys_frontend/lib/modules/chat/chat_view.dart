@@ -23,13 +23,11 @@ double screenHeight(BuildContext context) {
 
 class ChatView extends StatefulWidget {
   const ChatView({
-    required this.guideId,
     required this.receiverId,
     required this.role,
     super.key,
   });
 
-  final String guideId;
   final String receiverId;
   final String role;
 
@@ -37,10 +35,13 @@ class ChatView extends StatefulWidget {
   State<ChatView> createState() => _ChatViewState();
 }
 
-class _ChatViewState extends State<ChatView> {
+class _ChatViewState extends State<ChatView>with AutomaticKeepAliveClientMixin {
   late ChatViewModel _viewModel;
   final TextEditingController _messageInputController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  bool get wantKeepAlive => true;
 
   Future<void> fetchChatData() async {
     _viewModel = ChatViewModel();
@@ -68,6 +69,8 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    
     double width = screenWidth(context);
     double height = screenHeight(context);
     // ChatViewModel _viewModel = context.watch<ChatViewModel>();
@@ -204,6 +207,7 @@ class _ChatViewState extends State<ChatView> {
                     startDate: _viewModel.waitingForm!.startDate,
                     endDate: _viewModel.waitingForm!.endDate,
                     price: _viewModel.waitingForm!.price,
+                    status: _viewModel.waitingForm!.status,
                     screenWidth: width,
                     onPressed: () {
                       Navigator.push(
@@ -240,7 +244,6 @@ class _ChatViewState extends State<ChatView> {
                                 MaterialPageRoute(
                                   builder: (BuildContext context) =>
                                       CreateConfirmGuideView(
-                                    guideId: widget.guideId,
                                     userId: widget.receiverId,
                                   ),
                                 ),

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:guideguys/modules/guide_register/guide_register_model.dart';
 import 'package:guideguys/services/guide_register_service/guide_register_service.dart';
 import 'package:guideguys/services/guide_register_service/guide_register_service_interface.dart';
@@ -14,7 +17,7 @@ class GuideRegisterViewModel {
   ];
 
   GuideRegisterModel newGuideInfo = GuideRegisterModel(
-    base64GuideImage: '',
+    base64CardImage: '',
     guideCardNumber: '',
     guideCardType: '',
     expiredDate: DateTime.now(),
@@ -23,16 +26,18 @@ class GuideRegisterViewModel {
     experience: '',
   );
 
-  Future<bool> onUserRegisterGuide(
-      {required String cardNo,
-      required String cardType,
-      required DateTime expiredDate,
-      required List<String> convinces,
-      required TextfieldTagsController languageList,
-      required String experience}) async {
+  Future<bool> onUserRegisterGuide({
+    required Uint8List cardImage,
+    required String cardNo,
+    required String cardType,
+    required DateTime expiredDate,
+    required List<String> convinces,
+    required TextfieldTagsController languageList,
+    required String experience,
+  }) async {
     try {
       newGuideInfo = GuideRegisterModel(
-        base64GuideImage: '',
+        base64CardImage: base64Encode(cardImage),
         guideCardNumber: cardNo,
         guideCardType: cardType,
         expiredDate: expiredDate,

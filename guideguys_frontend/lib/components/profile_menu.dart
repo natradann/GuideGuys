@@ -15,23 +15,26 @@ class ProfileMenu extends StatelessWidget {
 
   final double width;
 
-  Future<String> getUsername() async {
-    return await SecureStorage().readSecureData('myUsername');
+  Future<List<String>> getUsername() async {
+    String username = await SecureStorage().readSecureData('myUsername');
+    String email = await SecureStorage().readSecureData('myEmail');
+    return [username, email];
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: SecureStorage().readSecureData('myUsername'),
+        future: getUsername(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            String myUsername = snapshot.data ?? '';
+            String myUsername = snapshot.data![0];
+            String myEmail = snapshot.data![1];
             return Drawer(
               backgroundColor: bgColor,
               width: width * 0.75,
               child: Column(
                 children: [
-                  profileInfo(width, myUsername),
+                  profileInfo(width, myUsername, myEmail),
                   const SeperateLine(),
                   profileMenuCardList(
                     width: width,
@@ -62,8 +65,7 @@ class ProfileMenu extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const MyTourListView(),
+                          builder: (context) => const MyTourListView(),
                         ),
                       );
                     },
@@ -90,11 +92,11 @@ class ProfileMenu extends StatelessWidget {
                       cardTitle: 'Logout',
                       onPressed: () {
                         SecureStorage().deleteAllData();
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                        Navigator.pushReplacement(
-                          context,
+                        Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                              builder: (context) => const LoginView()),
+                            builder: (context) => const LoginView(),
+                          ),
+                          (Route route) => false,
                         );
                       }),
                 ],
@@ -140,18 +142,12 @@ class ProfileMenu extends StatelessWidget {
     );
   }
 
-  Container profileInfo(double width, String myUsername) {
+  Container profileInfo(double width, String myUsername, String myEmail) {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CircleAvatar(
-            radius: width * 0.07,
-            backgroundImage:
-                const AssetImage('assets/images/blank-profile-picture.png'),
-          ),
-          const SizedBox(width: 20),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -163,9 +159,9 @@ class ProfileMenu extends StatelessWidget {
                   fontSize: width * 0.05,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Text(
-                'olivia@gmail.com',
+                myEmail,
                 style: TextStyle(
                   color: grey500,
                   fontSize: width * 0.04,

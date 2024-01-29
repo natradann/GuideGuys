@@ -17,6 +17,6 @@ export class Chat {
     user2: User
 
     @OneToMany(() => Message, (message) => message.chat)
-    message: Message
+    message: Message[]
 
 }

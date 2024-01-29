@@ -41,7 +41,15 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
                 }
             
                 newUser.password = hash;
-                const userSaved = await usersRepository.save(newUser)
+                const userSaved = await usersRepository.save({
+                    username: newUser.username,
+                    email: newUser.email,
+                    password: newUser.password,
+                    first_name: newUser.first_name,
+                    last_name: newUser.last_name,
+                    img: Buffer.from(newUser.img, 'base64'),
+                    phone_number: newUser.phone_number,
+                })
                 signJWT(newUser, (_error, token) => {
                     if (_error) {
                         return res.status(402).json({
@@ -101,6 +109,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
                         user_id: userMatch.id,
                         username: userMatch.username,
                         guide_id: (userMatch.guide != null) ? userMatch.guide.id : null,
+                        user_email: userMatch.email
                     });
                 }
             });

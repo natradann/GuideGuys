@@ -36,7 +36,7 @@ const getWaitingToConfirmForm = async (req: Request, res: Response, next: NextFu
         .leftJoinAndSelect('guide.user', 'user')
         .where('customer.username = :username', {username: res.locals.jwt.username})
         .andWhere('user.id = :guideUserId', {guideUserId: req.params.guideUserId})
-        .andWhere('history.status = :status', {status: "waiting for confirm"})
+        .andWhere('history.status = :status', {status: "0"})
         .select(['history.id', 'history.tour_name', 'history.status', 
         'history.start_date', 'history.end_date', 'history.price',
         'guide.id', 'user.username'])

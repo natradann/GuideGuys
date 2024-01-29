@@ -6,6 +6,8 @@ class GuideModel {
   late String? guideImg;
   late List<String> convinces;
   late List<String> languages;
+  late List<String> tourTypes;
+  late List<String> allVehicles;
   late double ratePoint;
 
   GuideModel({
@@ -14,27 +16,27 @@ class GuideModel {
     this.guideImg,
     required this.convinces,
     required this.languages,
+    required this.tourTypes,
+    required this.allVehicles,
     required this.ratePoint,
   });
 
   factory GuideModel.fromJson(Map<String, dynamic> json) {
+    print(json['guide_convinces']);
     try {
       GuideModel guide = GuideModel(
         guideId: json['guide_id'],
         guideName: json['username'],
-        guideImg: (json['guide_img'] != null) ? json['guide_img'] : null ,
-        convinces: (jsonDecode(json['guide_convinces']) as List<dynamic>)
-            .map<String>((convince) => convince.toString())
-            .toList(),
-        languages: (jsonDecode(json['guide_languages']) as List<dynamic>)
-            .map<String>((language) => language)
-            .toList(),
+        guideImg: (json['guide_img'] != null) ? json['guide_img'] : null,
+        convinces: List<String>.from(json["guide_convinces"].map((x) => x)),
+        languages: List<String>.from(json["guide_languages"].map((x) => x)),
+        tourTypes: List<String>.from(json["guide_tour_type"].map((x) => x)),
+        allVehicles: List<String>.from(json["guide_vehicle"].map((x) => x)),
         ratePoint: json['guide_point'].toDouble(),
       );
       return guide;
     } catch (error) {
-      throw Exception(
-          'Error on guide in username: ${json['user_username']} and guideId: ${json['guide_id']}');
+      throw 'Error on guide in username: ${json['username']} and guideId: ${json['guide_id']} error on $error';
     }
   }
 }

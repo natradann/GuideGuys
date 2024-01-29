@@ -69,8 +69,7 @@ class _TourDetialViewState extends State<TourDetialView> {
                 children: [
                   (_viewModel.tour.tourImage != null)
                       ? Image.memory(
-                          base64Decode(
-                              _viewModel.tour.tourImage!),
+                          base64Decode(_viewModel.tour.tourImage!),
                           height: height * 0.3,
                           width: width,
                           fit: BoxFit.cover,
@@ -81,12 +80,6 @@ class _TourDetialViewState extends State<TourDetialView> {
                           width: width,
                           fit: BoxFit.cover,
                         ),
-                  // Image.asset(
-                  //   _viewModel.tour.imgPath,
-                  //   height: height * 0.3,
-                  //   width: width,
-                  //   fit: BoxFit.cover,
-                  // ),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Padding(
@@ -112,7 +105,7 @@ class _TourDetialViewState extends State<TourDetialView> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      leftTourDetail(screenWidth: width),
+                                      leftTourDetail(contentWidth: width - 40),
                                       rightTourDetail()
                                     ],
                                   ),
@@ -141,7 +134,6 @@ class _TourDetialViewState extends State<TourDetialView> {
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) => ChatView(
-                              guideId: _viewModel.tour.guideId,
                               receiverId: _viewModel.tour.guideUserId,
                               role: 'guide',
                             ),
@@ -203,10 +195,16 @@ class _TourDetialViewState extends State<TourDetialView> {
           children: [
             Text(_viewModel.tour.username),
             const SizedBox(width: 10),
-            const CircleAvatar(
-              backgroundImage:
-                  AssetImage('assets/images/blank-profile-picture.png'),
-            )
+             CircleAvatar(
+              backgroundImage: (_viewModel.tour.guideImage != null)
+                  ? Image.memory(base64Decode(_viewModel.tour.guideImage!)).image
+                  : const AssetImage('assets/images/blank-profile-picture.png'),
+              // radius: 25,
+            ),
+            // const CircleAvatar(
+            //   backgroundImage:
+            //       AssetImage('assets/images/blank-profile-picture.png'),
+            // )
           ],
         ),
         Text(
@@ -217,72 +215,65 @@ class _TourDetialViewState extends State<TourDetialView> {
     );
   }
 
-  Column leftTourDetail({required double screenWidth}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _tourRate(widthForStar: screenWidth),
-        Row(
-          children: [
-            const Icon(
-              Icons.pin_drop_outlined,
-              color: black,
-            ),
-            const SizedBox(width: 10),
-            Wrap(
-              spacing: 2,
-              children: _viewModel.tour.convinces
+  SizedBox leftTourDetail({required double contentWidth}) {
+    return SizedBox(
+      width: contentWidth * 0.6,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _tourRate(widthForStar: contentWidth),
+          Wrap(
+            spacing: 2,
+            children: [
+              const Icon(
+                Icons.pin_drop_outlined,
+                color: black,
+              ),
+              ..._viewModel.tour.convinces
                   .map((item) => Text(
                         item,
                       ))
                   .toList(),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            const Icon(
-              Icons.language,
-              color: black,
-            ),
-            const SizedBox(width: 10),
-            Wrap(
-              spacing: 2,
-              children: _viewModel.tour.languages
+            ],
+          ),
+          Wrap(
+            spacing: 2,
+            children: [
+              const Icon(
+                Icons.language,
+                color: black,
+              ),
+              ..._viewModel.tour.languages
                   .map((item) => Text(
                         item,
                       ))
                   .toList(),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            const Text('การเดินทาง/ยานพาหนะ : '),
-            Wrap(
-              spacing: 2,
-              children: _viewModel.tour.vehicle
+            ],
+          ),
+          Wrap(
+            spacing: 2,
+            children: [
+              const Text('การเดินทาง/ยานพาหนะ : '),
+              ..._viewModel.tour.vehicle
                   .map((item) => Text(
                         item,
                       ))
                   .toList(),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            const Text('การท่องเที่ยว : '),
-            Wrap(
-              spacing: 2,
-              children: _viewModel.tour.type
+            ],
+          ),
+          Wrap(
+            spacing: 2,
+            children: [
+              const Text('การท่องเที่ยว : '),
+              ..._viewModel.tour.type
                   .map((item) => Text(
                         item,
                       ))
                   .toList(),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 

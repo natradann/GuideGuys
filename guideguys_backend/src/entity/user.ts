@@ -27,6 +27,10 @@ export class User {
     @Column({nullable: false})
     last_name: string
 
+        
+    @Column({type: "longblob", nullable: true})
+    img: Buffer
+
     @Column()
     phone_number: string
     
@@ -38,19 +42,19 @@ export class User {
     created_at: string
 
     @OneToMany(() => History, (history) => history.customer)
-    history: History
+    history: History[]
 
     @OneToMany(() => Rate, (rate) => rate.user_id)
-    rate: Rate
+    rate: Rate[]
 
     @OneToMany(() => Chat, (chat) => chat.user1)
-    chat_user1: Chat
+    chat_user1: Chat[]
 
     @OneToMany(() => Chat, (chat) => chat.user2)
-    chat_user2: Chat
+    chat_user2: Chat[]
 
     @OneToMany(() => Message, (message) => message.sender_id)
-    sender_msg: Message
+    sender_msg: Message[]
 
 
 }

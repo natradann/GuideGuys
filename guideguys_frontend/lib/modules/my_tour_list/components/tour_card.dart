@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/star_rate.dart';
 import 'package:guideguys/components/tag_in_card.dart';
@@ -52,12 +54,19 @@ class TourCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        model.tourImgPath,
-                        height: cardHeight * 0.56,
-                        width: screenWidth,
-                        fit: BoxFit.cover,
-                      ),
+                      (model.tourImage != null)
+                          ? Image.memory(
+                              base64Decode(model.tourImage!),
+                              height: cardHeight * 0.56,
+                              width: screenWidth,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              "assets/images/blank-profile-picture.png",
+                              height: cardHeight * 0.56,
+                              width: screenWidth,
+                              fit: BoxFit.cover,
+                            ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                         child: Column(
@@ -92,7 +101,9 @@ class TourCard extends StatelessWidget {
                               child: Wrap(
                                 runSpacing: 5,
                                 clipBehavior: Clip.hardEdge,
-                                children: (model.convinces + model.languages + model.type)
+                                children: (model.convinces +
+                                        model.languages +
+                                        model.type)
                                     .map(
                                       (item) => TagInCard(
                                         tagName: item,

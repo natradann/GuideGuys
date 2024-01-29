@@ -82,7 +82,7 @@ class _FindGuieViewState extends State<FindAllListView> {
               ),
             ),
             Expanded(
-              child: (widget.pageTitle == 'Tours')
+              child: (widget.pageTitle == 'โปรแกรมนำเที่ยว')
                   ? ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,

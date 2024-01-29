@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/confirm_popup.dart';
 import 'package:guideguys/constants/colors.dart';
@@ -7,6 +8,9 @@ import 'package:guideguys/modules/home/home_view.dart';
 import 'package:guideguys/modules/login/login_view.dart';
 import 'package:guideguys/components/textfield_sm.dart';
 import 'package:guideguys/modules/register/register_view_model.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -26,6 +30,8 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController firstNameText = TextEditingController();
   TextEditingController lastNameText = TextEditingController();
   TextEditingController phoneNumberText = TextEditingController();
+  Uint8List? userImage;
+  String? userImageName;
 
   @override
   void initState() {
@@ -43,6 +49,28 @@ class _RegisterViewState extends State<RegisterView> {
     firstNameText.dispose();
     lastNameText.dispose();
     phoneNumberText.dispose();
+  }
+
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    try {
+      final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 20,
+      );
+
+      if (pickedFile != null) {
+        final imageBytes = await pickedFile.readAsBytes();
+        final imageFileName = path.basename(pickedFile.path);
+
+        setState(() {
+          userImage = imageBytes;
+          userImageName = imageFileName;
+        });
+      }
+    } catch (e) {
+      print("Error picking image: $e");
+    }
   }
 
   @override
@@ -95,6 +123,21 @@ class _RegisterViewState extends State<RegisterView> {
 
                 //   },
                 // ),
+                sizedBox(),
+                TextFieldSM(
+                  labelTFF: 'รูปภาพโปรไฟล์',
+                  hintTextinTFF: 'เพิ่มรูปภาพโปรไฟล์',
+                  pfIcon: IconButton(
+                    icon: const Icon(Icons.add_a_photo_outlined),
+                    color: grey500,
+                    onPressed: () async {
+                      pickImage();
+                    },
+                  ),
+                  inputType: TextInputType.none,
+                  textController: TextEditingController(text: userImageName),
+                  inputAction: TextInputAction.next,
+                ),
                 sizedBox(),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -156,6 +199,7 @@ class _RegisterViewState extends State<RegisterView> {
                     password: passwordText.text,
                     firstName: firstNameText.text,
                     lastName: lastNameText.text,
+                    userImage: userImage!,
                     phoneNumber: phoneNumberText.text,
                   );
                   if (!mounted) return;

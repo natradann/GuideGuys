@@ -119,7 +119,7 @@ class ChatViewModel {
 
   void sendMessage({required String messageController}) async {
     String message = messageController.trim();
-    String senderId = await SecureStorage().readSecureData('userId');
+    String senderId = await SecureStorage().readSecureData('myUserId');
     if (message.isEmpty) return;
     NewMeassageModel newMsg = NewMeassageModel(
       chatRoom: chatRoomDetail.roomId,

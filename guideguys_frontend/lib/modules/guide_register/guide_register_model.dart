@@ -1,5 +1,5 @@
 class GuideRegisterModel {
-  late String base64GuideImage;
+  late String base64CardImage;
   late String guideCardNumber;
   late String guideCardType;
   late DateTime expiredDate;
@@ -8,7 +8,7 @@ class GuideRegisterModel {
   late String experience;
 
   GuideRegisterModel({
-    required this.base64GuideImage,
+    required this.base64CardImage,
     required this.guideCardNumber,
     required this.guideCardType,
     required this.expiredDate,
@@ -19,7 +19,7 @@ class GuideRegisterModel {
 
   factory GuideRegisterModel.fromJson(Map<String, dynamic> json) =>
       GuideRegisterModel(
-        base64GuideImage: json['img'],
+        base64CardImage: json['card_img'],
         guideCardNumber: json["card_no"],
         guideCardType: json["type"],
         expiredDate: DateTime.parse(json["card_expired"]),
@@ -29,7 +29,7 @@ class GuideRegisterModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "img": base64GuideImage,
+        "card_img": base64CardImage,
         "card_no": guideCardNumber,
         "type": guideCardType,
         "card_expired": expiredDate.toIso8601String(),

@@ -21,12 +21,10 @@ double screenHeight(BuildContext context) {
 
 class CreateConfirmGuideView extends StatefulWidget {
   const CreateConfirmGuideView({
-    required this.guideId,
     required this.userId,
     super.key,
   });
 
-  final String guideId;
   final String userId;
 
   @override
@@ -35,17 +33,52 @@ class CreateConfirmGuideView extends StatefulWidget {
 
 class _CreateConfirmGuideViewState extends State<CreateConfirmGuideView> {
   late CreateConfirmGuideViewModel _viewModel;
-   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     _viewModel = CreateConfirmGuideViewModel();
+    _viewModel.fetchGuideInfo();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<DateTime> _selectDate({
+    required TextEditingController dateController,
+    required DateTime datePicked,
+  }) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      builder: (context, child) => Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.light(
+            primary: yellow,
+            onPrimary: black,
+            surface: bgColor,
+            secondary: bgPurple,
+          ),
+          dialogBackgroundColor: bgColor,
+          dialogTheme: DialogTheme(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+        ),
+        child: child!,
+      ),
+      initialDate: datePicked,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2050),
+    );
+
+    if (picked != null) {
+      return picked;
+    }
+    return DateTime.now();
   }
 
   @override
@@ -69,49 +102,17 @@ class _CreateConfirmGuideViewState extends State<CreateConfirmGuideView> {
     TextEditingController aptPlace =
         TextEditingController(text: _viewModel.confirmForm.aptPlace);
 
-    Future<DateTime> _selectDate({
-      required TextEditingController dateController,
-      required DateTime datePicked,
-    }) async {
-      DateTime? picked = await showDatePicker(
-        context: context,
-        builder: (context, child) => Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: yellow,
-              onPrimary: black,
-              surface: bgColor,
-              secondary: bgPurple,
-            ),
-            dialogBackgroundColor: bgColor,
-            dialogTheme: DialogTheme(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-          ),
-          child: child!,
-        ),
-        initialDate: datePicked,
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2050),
-      );
-
-      if (picked != null) {
-        return picked;
-      }
-      return DateTime.now();
-    }
-
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         backgroundColor: bgColor,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         endDrawer: ProfileMenu(width: width),
         body: FutureBuilder(
-            future: _viewModel.fetchGuideInfo(),
+            future: _viewModel.guideInfoData,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Padding(
@@ -382,7 +383,6 @@ class _CreateConfirmGuideViewState extends State<CreateConfirmGuideView> {
                           },
                           purpleButtonFn: () async {
                             _viewModel.confirmForm.customerId = widget.userId;
-                            _viewModel.confirmForm.guideId = widget.guideId;
                             bool isCreated =
                                 await _viewModel.createConfirmForm();
                             if (isCreated && mounted) {

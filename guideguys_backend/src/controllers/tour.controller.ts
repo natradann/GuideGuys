@@ -91,16 +91,17 @@ const getTourDetailByTourId = async (req: Request, res: Response, next: NextFunc
         const tourDetail = await userRepository.createQueryBuilder("user")
         .leftJoinAndSelect("user.guide", "guide")
         .leftJoinAndSelect("guide.tour", "tour")
-        .select(["user.id", "user.username", "guide.languages", "tour"])
+        .select(["user.id", "user.username", "user.img", "guide.languages", "tour"])
         .where("tour.id = :tourId", {tourId: req.params.tourId})
         .getRawOne();
 
         return res.status(200).json({
             "tour_id": tourDetail.tour_id,
             "tour_name": tourDetail.tour_name,
-            "tour_img": tourDetail.tour_img != null ? Buffer.from(tourDetail.tour_img).toString('base64') : null,
+            "tour_img": (tourDetail.tour_img != null) ? Buffer.from(tourDetail.tour_img).toString('base64') : null,
             "user_id": tourDetail.user_id,
             "user_username": tourDetail.user_username,
+            "guide_img": (tourDetail.user_img != null) ? Buffer.from(tourDetail.user_img).toString('base64') : null,
             "guide_languages": tourDetail.guide_languages,
             "tour_convinces": tourDetail.tour_convinces,
             "tour_vehicles": tourDetail.tour_vehicle,
@@ -134,9 +135,20 @@ const getTourListByToken = async (req: Request, res: Response, next: NextFunctio
         .getRawMany();
 
         if (allTours != null){
-            return res.status(200).json({
-                allTours
-            })
+            return res.status(200).json(
+                // allTours
+                allTours.map((tour) => ({
+                    tour_id: tour.tour_id,
+                    tour_name: tour.tour_name,
+                    tour_img: (tour.tour_img != null) ? Buffer.from(tour.tour_img).toString('base64') : null,
+                    tour_convinces: tour.tour_convinces,
+                    tour_vehicle: tour.tour_vehicle,
+                    tour_type: tour.tour_type,
+                    tour_price: tour.tour_price,
+                    tour_point: tour.tour_point,
+                    guide_languages: tour.guide_languages
+                }))
+            )
         } else {
             return res.status(404).json({
                 message: 'guide has no tour'

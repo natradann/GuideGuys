@@ -32,8 +32,8 @@ const guideRegister = async (req: Request, res: Response, next: NextFunction) =>
                 guideMatch
                 });
             } else {
-                await guideRepository.save({
-                    img: Buffer.from(newGuide.img, 'base64'),
+                const savedGuide = await guideRepository.save({
+                    card_img: Buffer.from(newGuide.card_img, 'base64'),
                     card_no: newGuide.card_no,
                     type: newGuide.type,
                     card_expired: newGuide.card_expired,
@@ -43,7 +43,7 @@ const guideRegister = async (req: Request, res: Response, next: NextFunction) =>
                     point: newGuide.point,
                   });
                 const userRepository = AppDataSource.getRepository(User);
-                await userRepository.update({username: guideUsername}, {guide: newGuide});
+                await userRepository.update({username: guideUsername}, {guide: savedGuide});
                 return res.status(200).json({
                     message: 'Guide Register complete',
                     userMatch,
@@ -66,21 +66,30 @@ const getAllGuides = async (req: Request, res: Response, next: NextFunction) => 
         const userRepositoty = AppDataSource.getRepository(User);
         const guides = await userRepositoty.createQueryBuilder("user")
         .innerJoinAndSelect("user.guide", "guide")
-        .select(['user.username', 'guide.id', 'guide.img', 'guide.point',
-         'guide.convinces', 'guide.languages'])
-        .getRawMany();
+        .leftJoinAndSelect('guide.tour', 'tour')
+        .select(['user.username', 'guide.id', 'user.img', 'guide.point',
+         'guide.convinces', 'guide.languages', 'tour.type', 'tour.vehicle'])
+        .getMany();
+
+        // for( in allGuides){
+
+        // }
+
+        const allGuides =  guides.map((guide) => ({
+                username: guide.username,
+                guide_id: guide.guide.id,
+                guide_img: (guide.img != null) ? Buffer.from(guide.img).toString('base64') : null,
+                guide_convinces: guide.guide.convinces,
+                guide_languages: guide.guide.languages,
+                guide_tour_type: Array.from(new Set(guide.guide.tour.flatMap(tour => tour.type))),
+                guide_vehicle: Array.from(new Set(guide.guide.tour.flatMap(tour => tour.vehicle))),
+                guide_point: guide.guide.point,
+            }));
 
         return res.status(200).json(
-            // guides
-            guides.map((guide) => ({
-                "username": guide.user_username,
-                "guide_id": guide.guide_id,
-                "guide_img": (guide.guide_img != null) ? Buffer.from(guide.guide_img).toString : null,
-                "guide_convinces": guide.guide_convinces,
-                "guide_languages": guide.guide_languages,
-                "guide_point": guide.guide_point,
-            }))
-        );
+            // guides,
+            allGuides
+            );
 
     } catch (error) {
         logging.error(NAMESPACE, error.message, error);
@@ -100,7 +109,7 @@ const getGuideProfileAndTourByGuideId = async (req: Request, res: Response, next
         .leftJoinAndSelect("user.guide", "guide")
         .leftJoinAndSelect("guide.tour", "tour")
         .select(['user.id', 'user.username', 'user.first_name', 
-        'user.last_name', 'guide', 'tour.id', 'tour.name', 
+        'user.last_name', 'user.img', 'guide', 'tour.id', 'tour.name', 
         'tour.img', 'tour.convinces', 'tour.type', 'tour.price', 'tour.point'])
         .where("user.guide_id = :guideId", {guideId: req.params.guideId})
         .getOne();
@@ -112,10 +121,11 @@ const getGuideProfileAndTourByGuideId = async (req: Request, res: Response, next
             "username": guide.username,
             "firstName": guide.first_name,
             "lastName": guide.last_name,
+            "guide_img": (guide.img) ? Buffer.from(guide.img).toString('base64') : null,
             "guideId": guideInfo.id,
             "guideCardNo": guideInfo.card_no,
             "guideType": guideInfo.type,
-            "guideImg": guideInfo.img,
+            // "guideImg": guideInfo.guide_img,
             "guideCardExpired": guideInfo.card_expired,
             "guidePoint": guideInfo.point,
             "convinces": guideInfo.convinces,

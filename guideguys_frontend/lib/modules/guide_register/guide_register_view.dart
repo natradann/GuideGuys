@@ -1,8 +1,6 @@
 import 'dart:typed_data';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:guideguys/components/purple_white_pair_button.dart';
 import 'package:guideguys/components/textfield_sm.dart';
 import 'package:guideguys/constants/colors.dart';
@@ -35,8 +33,8 @@ class _GuideRegisterViewState extends State<GuideRegisterView> {
   TextfieldTagsController language = TextfieldTagsController();
   TextEditingController exp = TextEditingController();
   late List<String> convinceSelected = [];
-  Uint8List? image;
-  String? imageName;
+  Uint8List? cardImage;
+  String? cardImageName;
 
   Future<DateTime> _selectDate({
     required TextEditingController dateController,
@@ -85,8 +83,8 @@ class _GuideRegisterViewState extends State<GuideRegisterView> {
         final imageFileName = path.basename(pickedFile.path);
 
         setState(() {
-          image = imageBytes;
-          imageName = imageFileName;
+          cardImage = imageBytes;
+          cardImageName = imageFileName;
         });
       }
     } catch (e) {
@@ -131,9 +129,13 @@ class _GuideRegisterViewState extends State<GuideRegisterView> {
               ),
             ),
             sizedBox(),
+            
+            sizedBox(),
+            guideCardNo(cardNo: cardNo),
+            sizedBox(),
             TextFieldSM(
-              labelTFF: 'รูปภาพโปรไฟล์ไกด์',
-              hintTextinTFF: 'เพิ่มรูปภาพโปรไฟล์ไกด์',
+              labelTFF: 'รูปภาพบัตรไกด์',
+              hintTextinTFF: 'เพิ่มรูปภาพบัตรไกด์',
               pfIcon: IconButton(
                 icon: const Icon(Icons.add_a_photo_outlined),
                 color: grey500,
@@ -142,11 +144,9 @@ class _GuideRegisterViewState extends State<GuideRegisterView> {
                 },
               ),
               inputType: TextInputType.none,
-              textController: TextEditingController(text: imageName),
+              textController: TextEditingController(text: cardImageName),
               inputAction: TextInputAction.next,
             ),
-            sizedBox(),
-            guideCardNo(cardNo: cardNo),
             sizedBox(),
             guideCardType(),
             sizedBox(),
@@ -172,6 +172,7 @@ class _GuideRegisterViewState extends State<GuideRegisterView> {
               whiteButtonFn: () {},
               purpleButtonFn: () async {
                 bool isGuideRegis = await _viewModel.onUserRegisterGuide(
+                  cardImage: cardImage!,
                   cardNo: cardNo.text,
                   cardType: cardType,
                   expiredDate: expiredDate,
