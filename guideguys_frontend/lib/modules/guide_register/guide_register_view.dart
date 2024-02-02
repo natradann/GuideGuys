@@ -148,8 +148,8 @@ class _GuideRegisterViewState extends State<GuideRegisterView> {
               inputAction: TextInputAction.next,
             ),
             sizedBox(),
-            guideCardType(),
-            sizedBox(),
+            // guideCardType(),
+            // sizedBox(),
             expiredGuideCard(),
             sizedBox(),
             tourConvinces(),
@@ -174,26 +174,18 @@ class _GuideRegisterViewState extends State<GuideRegisterView> {
                 bool isGuideRegis = await _viewModel.onUserRegisterGuide(
                   cardImage: cardImage!,
                   cardNo: cardNo.text,
-                  cardType: cardType,
+                  cardType: '',
                   expiredDate: expiredDate,
                   convinces: convinceSelected,
                   languageList: language,
                   experience: exp.text,
                 );
-                // print(isGuideRegis);
-                // if (isGuideRegis) {
-                //   print(_viewModel.newGuideInfo.guideCardNumber);
-                //   print(_viewModel.newGuideInfo.guideCardType);
-                //   print(_viewModel.newGuideInfo.expiredDate);
-                //   print(_viewModel.newGuideInfo.convinces);
-                //   print(_viewModel.newGuideInfo.languages);
-                // }
 
                 if (isGuideRegis && mounted) {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => const LoginView(),
+                      builder: (BuildContext context) => const HomeView(),
                     ),
                   );
                 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guideguys/constants/colors.dart';
 import 'package:guideguys/modules/chat_room_list/chat_room_list_view.dart';
+import 'package:guideguys/modules/home/home_view.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -23,7 +24,16 @@ class CustomAppBarState extends State<CustomAppBar> {
     return AppBar(
       automaticallyImplyLeading: false,
       // leading: const Icon(Icons.outlined_flag, color: Colors.white,),
-      title: const Text("GuideGuys"),
+      title: GestureDetector(
+          onTap: () {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomeView(),
+                ),
+                (route) => false);
+          },
+          child: const Text("GuideGuys")),
       actions: (widget.isChat)
           ? []
           : [

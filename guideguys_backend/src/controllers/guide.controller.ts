@@ -33,7 +33,7 @@ const guideRegister = async (req: Request, res: Response, next: NextFunction) =>
                 });
             } else {
                 const savedGuide = await guideRepository.save({
-                    card_img: Buffer.from(newGuide.card_img, 'base64'),
+                    card_img: Buffer.from(req.files[0].buffer),
                     card_no: newGuide.card_no,
                     type: newGuide.type,
                     card_expired: newGuide.card_expired,
@@ -44,11 +44,9 @@ const guideRegister = async (req: Request, res: Response, next: NextFunction) =>
                   });
                 const userRepository = AppDataSource.getRepository(User);
                 await userRepository.update({username: guideUsername}, {guide: savedGuide});
-                return res.status(200).json({
-                    message: 'Guide Register complete',
-                    userMatch,
-                    newGuide
-                })
+                return res.status(200).json(
+                    savedGuide.id
+                )
             }
         }
     } catch (error) {
@@ -68,7 +66,7 @@ const getAllGuides = async (req: Request, res: Response, next: NextFunction) => 
         .innerJoinAndSelect("user.guide", "guide")
         .leftJoinAndSelect('guide.tour', 'tour')
         .select(['user.username', 'guide.id', 'user.img', 'guide.point',
-         'guide.convinces', 'guide.languages', 'tour.type', 'tour.vehicle'])
+         'guide.convinces', 'guide.languages', 'tour.name', 'tour.type', 'tour.vehicle'])
         .getMany();
 
         // for( in allGuides){
@@ -81,6 +79,7 @@ const getAllGuides = async (req: Request, res: Response, next: NextFunction) => 
                 guide_img: (guide.img != null) ? Buffer.from(guide.img).toString('base64') : null,
                 guide_convinces: guide.guide.convinces,
                 guide_languages: guide.guide.languages,
+                guide_tour_name: Array.from(new Set(guide.guide.tour.flatMap(tour => tour.name))),
                 guide_tour_type: Array.from(new Set(guide.guide.tour.flatMap(tour => tour.type))),
                 guide_vehicle: Array.from(new Set(guide.guide.tour.flatMap(tour => tour.vehicle))),
                 guide_point: guide.guide.point,
@@ -106,7 +105,7 @@ const getGuideProfileAndTourByGuideId = async (req: Request, res: Response, next
     try {
         const userRepository = AppDataSource.getRepository(User);
         const guide = await userRepository.createQueryBuilder("user")
-        .leftJoinAndSelect("user.guide", "guide")
+        .innerJoinAndSelect("user.guide", "guide")
         .leftJoinAndSelect("guide.tour", "tour")
         .select(['user.id', 'user.username', 'user.first_name', 
         'user.last_name', 'user.img', 'guide', 'tour.id', 'tour.name', 
@@ -124,15 +123,22 @@ const getGuideProfileAndTourByGuideId = async (req: Request, res: Response, next
             "guide_img": (guide.img) ? Buffer.from(guide.img).toString('base64') : null,
             "guideId": guideInfo.id,
             "guideCardNo": guideInfo.card_no,
-            "guideType": guideInfo.type,
-            // "guideImg": guideInfo.guide_img,
+            // "guideType": guideInfo.type,
             "guideCardExpired": guideInfo.card_expired,
             "guidePoint": guideInfo.point,
             "convinces": guideInfo.convinces,
             "languages": guideInfo.languages,
             "experience": guideInfo.experience,
             "guideRatePoint": guideInfo.point,
-            "tours": guideInfo.tour,
+            "tours": guideInfo.tour.map((tour) => ({
+                id: tour.id,
+                name: tour.name,
+                img: Buffer.from(tour.img).toString('base64'),
+                convinces: tour.convinces,
+                type: tour.type,
+                price: tour.price,
+                point: tour.point,
+            })),
         })
     } catch (error) {
         logging.error(NAMESPACE, error.message, error);

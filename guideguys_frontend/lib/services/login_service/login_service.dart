@@ -20,7 +20,7 @@ class LoginService implements LoginServiceInterface {
     } else if (response.statusCode == 401) {
       throw "รหัสผ่านไม่ถูกต้อง";
     } else if (response.statusCode == 404) {
-      throw "ไม่พพบผู้ใช้";
+      throw "ไม่พบผู้ใช้";
     } else if (response.statusCode == 500) {
       throw "Internal Server Error";
     } else {

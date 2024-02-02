@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/custom_appbar.dart';
 import 'package:guideguys/components/profile_menu.dart';
@@ -6,7 +8,7 @@ import 'package:guideguys/modules/confirm_guide_detail/confirm_guide_detail_view
 import 'package:guideguys/modules/review_tour/review_tour_view.dart';
 import 'package:guideguys/components/tour_history_card.dart';
 import 'package:guideguys/modules/travel_history/travel_history_model.dart';
-import 'package:guideguys/modules/travel_history/travel_history_view_mdel.dart';
+import 'package:guideguys/modules/travel_history/travel_history_view_model.dart';
 
 double screenWidth(BuildContext context) {
   return MediaQuery.of(context).size.width;
@@ -31,6 +33,8 @@ class _TravelHistoryViewState extends State<TravelHistoryView> {
   void initState() {
     super.initState();
     _viewModel = TravelHistoryViewModel();
+    _viewModel.fetchTravelHistory();
+    _viewModel.fetchSecureData();
   }
 
   @override
@@ -51,7 +55,7 @@ class _TravelHistoryViewState extends State<TravelHistoryView> {
         ),
         endDrawer: ProfileMenu(width: width),
         body: FutureBuilder(
-            future: _viewModel.fetchTrevelHistory(),
+            future: _viewModel.allTourHistoryData,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Column(
@@ -61,7 +65,7 @@ class _TravelHistoryViewState extends State<TravelHistoryView> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                       child: Text(
-                        'History',
+                        'ประวัติ',
                         style: TextStyle(
                           color: black,
                           fontWeight: FontWeight.bold,
@@ -74,30 +78,31 @@ class _TravelHistoryViewState extends State<TravelHistoryView> {
                       child: ListView.builder(
                         reverse: true,
                         shrinkWrap: true,
-                        itemCount: _viewModel.allTourHistory.length,
+                        itemCount: _viewModel.allTourHistory.histories.length,
                         itemBuilder: (context, index) {
-                          TravelHistoryModel history =
-                              _viewModel.allTourHistory[index];
+                          History history =
+                              _viewModel.allTourHistory.histories[index];
                           return TourHistoryCard(
                             tourName: history.tourName,
-                            guideName: history.guideName,
+                            guideName: history.guideUsername,
                             status: history.status,
                             startDate: history.startDate,
                             endDate: history.endDate,
                             price: history.price,
                             screenWidth: width,
                             onPressed: () {
-                              if (history.status == 'waiting for confirm') {
+                              if (history.status == '0') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         ConfirmGuideDetailView(
                                       historyId: history.historyId,
+                                      status: history.status,
                                     ),
                                   ),
                                 );
-                              } else if (history.status == 'review') {
+                              } else if (history.status == '2') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -108,7 +113,18 @@ class _TravelHistoryViewState extends State<TravelHistoryView> {
                                     ),
                                   ),
                                 );
-                              }
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ConfirmGuideDetailView(
+                                      historyId: history.historyId,
+                                      status: history.status,
+                                    ),
+                                  ),
+                                );
+                              } 
                             },
                           );
                         },
@@ -157,30 +173,33 @@ class _TravelHistoryViewState extends State<TravelHistoryView> {
 
   Container profileInfo(double width) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(30, 20, 30, 30),
+      padding: const EdgeInsets.fromLTRB(20, 20, 30, 30),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircleAvatar(
             radius: width * 0.07,
-            backgroundImage:
-                const AssetImage('assets/images/blank-profile-picture.png'),
+            backgroundImage: (_viewModel.allTourHistory.customerImg != null)
+                ? Image.memory(
+                        base64Decode(_viewModel.allTourHistory.customerImg!))
+                    .image
+                : const AssetImage('assets/images/blank-profile-picture.png'),
           ),
           const SizedBox(width: 20),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Olivia Rhye',
+                _viewModel.myUsername,
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: grey700,
                   fontSize: width * 0.05,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               Text(
-                'olivia@gmail.com',
+                _viewModel.myEmail,
                 style: TextStyle(
                   color: grey500,
                   fontSize: width * 0.04,

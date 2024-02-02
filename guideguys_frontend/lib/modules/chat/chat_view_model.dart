@@ -17,6 +17,7 @@ class ChatViewModel {
   late List<MessageModel> messageList;
   final ScrollController scrollController = ScrollController();
   late Future<ChatViewData> chatViewData;
+  late String roleUser;
 
   // setMessageListModel(List<MessageModel> allMessageList) {
   //   _messageList = allMessageList;
@@ -25,6 +26,7 @@ class ChatViewModel {
 
   Future<bool> fetchChatAllData({required String receiverId}) async {
     String senderId = await SecureStorage().readSecureData('myUserId');
+    roleUser = await SecureStorage().readSecureData('myGuideId');
     try {
       waitingForm =
           await service.fetchWaitingStatusConfirmForm(userIdGuide: receiverId);
@@ -135,7 +137,7 @@ class ChatViewModel {
         "chatRoom": newMsg.chatRoom,
         "message_text": savedMsg.messageText,
         "sender_username": savedMsg.senderUsername,
-        "comment_date": savedMsg.sentAt.toIso8601String(),
+        "comment_date": savedMsg.sentAt.toString(),
       },
     );
   }

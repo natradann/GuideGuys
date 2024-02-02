@@ -15,6 +15,7 @@ import { Server, Socket } from 'socket.io';
 import http from 'http';
 import cors from 'cors';
 const bodyParser = require('body-parser');
+import multer from 'multer';
 
 // const io = new Server<
 // ClientToServerEvents,
@@ -37,18 +38,33 @@ const bodyParser = require('body-parser');
 //     })
 // });
 
+const upload = multer();
+
 export class App{
     private app : Application;
     private server: http.Server;
     private io: Server;
     private cors = require('cors');
+    private upload = multer(); 
     
     constructor(private port ?: number | string) {
+        const upload = multer();
         this.app = express();
         this.app.use(express.json());
         this.app.use(cors());
-        this.app.use(bodyParser.json({ limit: '200mb' }));
-        this.app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
+        
+
+        this.app.use(upload.any());
+        this.app.use(bodyParser.json({ limit: '10mb' }));
+        this.app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+
+
+        // this.app.use((req, res, next) => {
+        //     // Log details about the incoming request
+        //     console.log(req.body);
+        //     console.log(`Received request with payload size: ${Buffer.from(JSON.stringify(req.body)).length} bytes`);
+        //     next();
+        //   });
         
         this.server = http.createServer(this.app);
         

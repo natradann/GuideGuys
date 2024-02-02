@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:guideguys/components/custom_appbar.dart';
 import 'package:guideguys/components/profile_menu.dart';
 import 'package:guideguys/components/search_bar.dart';
-import 'package:guideguys/components/search_filter.dart';
 import 'package:guideguys/constants/colors.dart';
 import 'package:guideguys/modules/find_all_list/find_all_list_view.dart';
 import 'package:guideguys/modules/home/components/findallbar.dart';
@@ -29,16 +28,15 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView>
-    with AutomaticKeepAliveClientMixin {
+class _HomeViewState extends State<HomeView> {
   late HomeViewModel _viewModel;
   late TextEditingController tagsController;
   late List<String> typeTourList;
   late List<String> typeVehicleList;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  @override
-  bool get wantKeepAlive => true;
+  // @override
+  // bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -58,7 +56,7 @@ class _HomeViewState extends State<HomeView>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+    // super.build(context);
 
     double width = screenWidth(context);
     double height = screenHeight(context);

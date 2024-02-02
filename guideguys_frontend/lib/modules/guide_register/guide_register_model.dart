@@ -1,5 +1,7 @@
+import 'dart:typed_data';
+
 class GuideRegisterModel {
-  late String base64CardImage;
+  late Uint8List base64CardImage;
   late String guideCardNumber;
   late String guideCardType;
   late DateTime expiredDate;

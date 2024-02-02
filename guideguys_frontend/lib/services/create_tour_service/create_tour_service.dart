@@ -11,14 +11,26 @@ class CreateTourService implements CreateTourServiceInterface {
   Future<void> createTour({required CreateTourModel newTour}) async {
     String token = await SecureStorage().readSecureData('myToken');
     try {
-      http.Response response = await http.post(
+      http.MultipartRequest request = http.MultipartRequest(
+        'POST',
         Uri.parse('$ngrokLink/tours/create'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-        body: createTourModelToJson(newTour),
       );
+
+      request.headers['Authorization'] = 'bearer $token';
+      request.fields['tourName'] = newTour.tourName;
+      request.fields['convinces'] = newTour.convinces.join(',');
+      request.fields['vehicle'] = newTour.vehicle.join(',');
+      request.fields['tourType'] = newTour.tourType.join(',');
+      request.fields['detail'] = newTour.detail;
+      request.fields['price'] = newTour.price.toString();
+
+      request.files.add(http.MultipartFile.fromBytes(
+        'img',
+        newTour.base64Image,
+        filename: 'tour_image.jpg',
+      ));
+
+      http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
         return;

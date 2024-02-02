@@ -52,22 +52,22 @@ class TourModel {
   }
 }
 
-class GuideModel {
-  late String guidId;
-  late String guideName;
-  late String? guideImgPath;
-  late List<String> convinces;
-  late List<String> languages;
-  late double ratePoint;
+// class GuideModel {
+//   late String guidId;
+//   late String guideName;
+//   late String? guideImgPath;
+//   late List<String> convinces;
+//   late List<String> languages;
+//   late double ratePoint;
 
-  GuideModel({
-    required this.guidId,
-    required this.guideName,
-    this.guideImgPath,
-    required this.convinces,
-    required this.languages,
-    required this.ratePoint,
-  });
+//   GuideModel({
+//     required this.guidId,
+//     required this.guideName,
+//     this.guideImgPath,
+//     required this.convinces,
+//     required this.languages,
+//     required this.ratePoint,
+//   });
 
   // factory GuideModel.fromJson(Map<String, dynamic> json) {
   //   try {
@@ -76,4 +76,4 @@ class GuideModel {
       
   //   }
   // }
-}
+// }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/custom_appbar.dart';
 import 'package:guideguys/components/profile_menu.dart';
@@ -30,7 +32,7 @@ class ReviewView extends StatefulWidget {
 
 class _ReviewViewState extends State<ReviewView> {
   late ReviewViewModel _viewModel;
-   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -51,7 +53,9 @@ class _ReviewViewState extends State<ReviewView> {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: bgColor,
-        appBar: CustomAppBar(appBarKey: _scaffoldKey,),
+        appBar: CustomAppBar(
+          appBarKey: _scaffoldKey,
+        ),
         endDrawer: ProfileMenu(width: width),
         body: FutureBuilder(
           future: _viewModel.fetchAllReview(tourId: widget.tourId),
@@ -59,12 +63,20 @@ class _ReviewViewState extends State<ReviewView> {
             if (snapshot.hasData) {
               return Column(
                 children: [
-                  Image.asset(
-                    "assets/images/blank-profile-picture.png",
-                    height: height * 0.3,
-                    width: width,
-                    fit: BoxFit.cover,
-                  ),
+                  (_viewModel.allReviews.tourImg != null)
+                      ? Image.memory(
+                          base64Decode(_viewModel.allReviews.tourImg),
+                          height: height * 0.3,
+                          width: width,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          "assets/images/blank-profile-picture.png",
+                          height: height * 0.3,
+                          width: width,
+                          fit: BoxFit.cover,
+                        ),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),

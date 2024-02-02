@@ -8,11 +8,11 @@ const NAMESPACE = 'Payment';
 
 const savedPayment = async (req: Request, res: Response, next: NextFunction) => {
     let newPayment = req.body;
-    console.log(newPayment.history_id);
+    console.log(req.files[0].buffer);
     try{
         const paymentRepository = AppDataSource.getRepository(Payment)
         await paymentRepository.save({
-            slip: Buffer.from(newPayment.slipImage, 'base64'),
+            slip: Buffer.from(req.files[0].buffer),
             history: newPayment.history_id
         });
 

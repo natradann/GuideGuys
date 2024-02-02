@@ -34,17 +34,32 @@ class CreateConfirmGuideView extends StatefulWidget {
 class _CreateConfirmGuideViewState extends State<CreateConfirmGuideView> {
   late CreateConfirmGuideViewModel _viewModel;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late TextEditingController tourName;
+  late TextEditingController price;
+  late TextEditingController headCount;
+  late TextEditingController tourPlan;
+  late TextEditingController aptPlace;
 
   @override
   void initState() {
     super.initState();
     _viewModel = CreateConfirmGuideViewModel();
     _viewModel.fetchGuideInfo();
+    tourName = TextEditingController();
+    price = TextEditingController();
+    headCount = TextEditingController();
+    tourPlan = TextEditingController();
+    aptPlace = TextEditingController();
   }
 
   @override
   void dispose() {
     super.dispose();
+    tourName.dispose();
+    price.dispose();
+    headCount.dispose();
+    tourPlan.dispose();
+    aptPlace.dispose();
   }
 
   Future<DateTime> _selectDate({
@@ -85,22 +100,12 @@ class _CreateConfirmGuideViewState extends State<CreateConfirmGuideView> {
   Widget build(BuildContext context) {
     double width = screenWidth(context);
     double height = screenHeight(context);
-    TextEditingController tourName =
-        TextEditingController(text: _viewModel.confirmForm.tourName);
     TextEditingController startDate = TextEditingController(
         text: DateFormat.yMd().format(_viewModel.confirmForm.startDate));
     TextEditingController endDate = TextEditingController(
         text: DateFormat.yMd().format(_viewModel.confirmForm.endDate));
-    TextEditingController price =
-        TextEditingController(text: _viewModel.confirmForm.price);
-    TextEditingController headCount = TextEditingController(
-        text: _viewModel.confirmForm.headCount.toString());
-    TextEditingController tourPlan =
-        TextEditingController(text: _viewModel.confirmForm.plan);
     TextEditingController aptDate = TextEditingController(
         text: DateFormat.yMd().format(_viewModel.confirmForm.aptDate));
-    TextEditingController aptPlace =
-        TextEditingController(text: _viewModel.confirmForm.aptPlace);
 
     return SafeArea(
       child: Scaffold(
@@ -324,8 +329,8 @@ class _CreateConfirmGuideViewState extends State<CreateConfirmGuideView> {
                           inputType: TextInputType.multiline,
                           minLineAmount: 5,
                           onEditingEnd: () async {
-                            _viewModel.confirmForm.plan = tourPlan.text;
                             setState(() {
+                              _viewModel.confirmForm.plan = tourPlan.text;
                               tourPlan = TextEditingController(
                                   text: _viewModel.confirmForm.plan);
                             });

@@ -5,11 +5,12 @@ import 'package:guideguys/services/tour_detail_service/tour_detail_service.dart'
 class TourDetailViewModel {
   TourDetailServiceInterface service = ToureDetailService();
   late TourDetailModel tour;
+  late Future<TourDetailModel> tourData;
 
-  Future<bool> fetchTourDetail({required String tourId}) async {
+  Future<void> fetchTourDetail({required String tourId}) async {
     try {
-      tour = await service.fetchTourDetail(tourId: tourId);
-      return true;
+      tourData = service.fetchTourDetail(tourId: tourId);
+      tour = await tourData;
     } catch (_) {
       rethrow;
     }

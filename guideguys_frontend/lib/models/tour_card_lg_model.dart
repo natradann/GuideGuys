@@ -29,26 +29,17 @@ class TourCardLGModel {
         tourId: json['tour_id'].toString(),
         tourName: json['tour_name'],
         tourImgPath: (json['tour_img'] == null) ? null : json['tour_img'],
-        convinces: (jsonDecode(json['tour_convinces']) as List<dynamic>)
-            .map<String>((convince) => convince.toString())
-            .toList(),
-        vehicles: (jsonDecode(json['tour_vehicles']) as List<dynamic>)
-            .map<String>((vehicle) => vehicle.toString())
-            .toList(),
-        languages: (jsonDecode(json['guide_languages']) as List<dynamic>)
-            .map<String>((language) => language.toString())
-            .toList(),
-        type: (jsonDecode(json['tour_type']) as List<dynamic>)
-            .map<String>((type) => type)
-            .toList(),
+        convinces: List<String>.from(json["tour_convinces"].split(',').map((x) => x)),
+        vehicles: List<String>.from(json["tour_vehicles"].split(',').map((x) => x)),
+        languages: List<String>.from(json["guide_languages"].split(',').map((x) => x)),
+        type: List<String>.from(json["tour_type"].split(',').map((x) => x)),
         price: json['tour_price'],
         ratePoint: json['tour_point'].toDouble(),
       );
       return tour;
     } catch (error) {
-      print(error);
       throw Exception(
-          'Error on tour in tourName: ${json['tour_name']} and tourId: ${json['tour_id']}');
+          'Error on tour in tourName: ${json['tour_name']} and tourId: ${json['tour_id']} error on $error');
     }
   }
 }

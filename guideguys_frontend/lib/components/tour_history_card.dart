@@ -6,7 +6,7 @@ class TourHistoryCard extends StatelessWidget {
   const TourHistoryCard({
     required this.tourName,
     required this.guideName,
-    this.status = 'รอการยืนยัน',
+    this.status = '',
     required this.startDate,
     required this.endDate,
     required this.price,
@@ -85,10 +85,12 @@ class TourHistoryCard extends StatelessWidget {
                     fontSize: screenWidth * 0.025,
                   ),
                 ),
-                const Icon(
-                  Icons.keyboard_arrow_right_rounded,
-                  color: black,
-                ),
+                (status == '0' || status == '2')
+                    ? const Icon(
+                        Icons.keyboard_arrow_right_rounded,
+                        color: black,
+                      )
+                    : const SizedBox(),
               ],
             ),
             Row(

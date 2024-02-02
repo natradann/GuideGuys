@@ -11,7 +11,7 @@ export class Guide {
     @Column({nullable: false, unique:true})
     card_no: string
 
-    @Column({nullable: false})
+    @Column({nullable: true})
     type: string
 
     @Column({type: "longblob", nullable: true})
@@ -20,7 +20,7 @@ export class Guide {
     @Column({type: "datetime"})
     card_expired: string
 
-    @Column({type: "json", nullable: false})
+    @Column({type: "json", nullable: true})
     convinces: string[]
 
     @Column({type: "json", nullable: false})

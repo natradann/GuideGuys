@@ -15,7 +15,7 @@ class PaymentViewModel {
     try {
       PaymentModel newPayment = PaymentModel(
         historyId: historyId,
-        base64Slip: base64Encode(slipImage),
+        base64Slip: slipImage,
       );
 
       return await service.savedPayment(newPayment);

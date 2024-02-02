@@ -20,6 +20,7 @@ const validateToken = (req: Request, res: Response, next: NextFunction) => {
 const register = async (req: Request, res: Response, next: NextFunction) => {
     let newUser = req.body;
     console.log(newUser);
+    console.log(req.files[0].buffer);
     try {
         const usersRepository = AppDataSource.getRepository(User);
         const userMatch = await usersRepository.createQueryBuilder("user")
@@ -33,7 +34,9 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
             });
         } else {
             bcryptjs.hash(newUser.password, 10, async (hashError, hash) => {
+                
                 if (hashError) {
+                    console.error('Hashing error:', hashError);
                     return res.status(403).json({
                         message: hashError.message,
                         error: hashError
@@ -47,9 +50,10 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
                     password: newUser.password,
                     first_name: newUser.first_name,
                     last_name: newUser.last_name,
-                    img: Buffer.from(newUser.img, 'base64'),
+                    img: Buffer.from(req.files[0].buffer),
                     phone_number: newUser.phone_number,
-                })
+                });
+                console.log('dds');
                 signJWT(newUser, (_error, token) => {
                     if (_error) {
                         return res.status(402).json({
@@ -57,10 +61,13 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
                             error: _error,
                         });
                     } else if (token) {
+                        console.log(userSaved);
                         return res.status(200).json({
                             token: token,
                             user_id: userSaved.id,
                             username: userSaved.username,
+                            email: userSaved.email,
+                            guide_id: userSaved.guide
                         });
                     }
                 });

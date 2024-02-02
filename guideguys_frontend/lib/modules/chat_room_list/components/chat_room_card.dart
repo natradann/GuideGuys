@@ -25,7 +25,6 @@ class ChatRoomCard extends StatelessWidget {
             builder: (context) => ChatView(
               receiverId:
                   (userId == model.user1Id) ? model.user2Id : model.user1Id,
-              role: 'guide',
             ),
           ),
         );

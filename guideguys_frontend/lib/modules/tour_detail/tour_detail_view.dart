@@ -41,6 +41,7 @@ class _TourDetialViewState extends State<TourDetialView> {
   void initState() {
     super.initState();
     _viewModel = TourDetailViewModel();
+    _viewModel.fetchTourDetail(tourId: widget.tourId);
   }
 
   @override
@@ -61,7 +62,7 @@ class _TourDetialViewState extends State<TourDetialView> {
         ),
         endDrawer: ProfileMenu(width: width),
         body: FutureBuilder(
-          future: _viewModel.fetchTourDetail(tourId: widget.tourId),
+          future: _viewModel.tourData,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               return Column(
@@ -135,7 +136,6 @@ class _TourDetialViewState extends State<TourDetialView> {
                           MaterialPageRoute(
                             builder: (BuildContext context) => ChatView(
                               receiverId: _viewModel.tour.guideUserId,
-                              role: 'guide',
                             ),
                           ),
                         );
@@ -195,9 +195,10 @@ class _TourDetialViewState extends State<TourDetialView> {
           children: [
             Text(_viewModel.tour.username),
             const SizedBox(width: 10),
-             CircleAvatar(
+            CircleAvatar(
               backgroundImage: (_viewModel.tour.guideImage != null)
-                  ? Image.memory(base64Decode(_viewModel.tour.guideImage!)).image
+                  ? Image.memory(base64Decode(_viewModel.tour.guideImage!))
+                      .image
                   : const AssetImage('assets/images/blank-profile-picture.png'),
               // radius: 25,
             ),

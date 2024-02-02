@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 CreateTourModel createTourModelFromJson(String str) =>
     CreateTourModel.fromJson(json.decode(str));
@@ -8,7 +9,7 @@ String createTourModelToJson(CreateTourModel data) =>
 
 class CreateTourModel {
   String tourName;
-  String base64Image;
+  Uint8List base64Image;
   List<String> convinces;
   List<String> vehicle;
   List<String> tourType;

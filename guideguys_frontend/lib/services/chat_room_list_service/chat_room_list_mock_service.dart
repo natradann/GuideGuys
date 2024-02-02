@@ -7,7 +7,7 @@ class ChatRoomListMockService implements ChatRoomListServiceInterface {
     try {
       return [
         ChatRoomListModel(
-          roomId: 1,
+          roomId: '1',
           user1Id: "2a463610-31f5-44d8-8ed6-30457b27cbd7",
           user1Username: "natradann",
           user2Id: "c3e3bc61-e366-4554-a457-7b6139ccff5e",

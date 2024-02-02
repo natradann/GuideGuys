@@ -116,7 +116,7 @@ class _PaymentViewState extends State<PaymentView> {
                     ),
                     const FixedSizeBuffer(h: 20),
                     Image.asset(
-                      'assets/images/blank-profile-picture.png',
+                      'assets/images/promtpay.png',
                       width: width * 0.6,
                     ),
                     const FixedSizeBuffer(h: 20),

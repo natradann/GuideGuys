@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:guideguys/data/mock_data.dart';
 import 'package:guideguys/modules/create_tour/create_tour_model.dart';
 import 'package:guideguys/services/create_tour_service/create_tour_service.dart';
 import 'package:guideguys/services/create_tour_service/create_tour_service_interface.dart';
@@ -7,21 +8,9 @@ import 'package:guideguys/services/create_tour_service/create_tour_service_inter
 class CreateTourViewModel {
   CreateTourServiceInterface service = CreateTourService();
   late CreateTourModel newTour;
-  List<String> tourTypes = ["ชอปปิง"];
-  List<String> convinces = [
-    "กรุงเทพ",
-    "สมุทรปราการ",
-    "นนทบุรี",
-    "ปทุมธานี",
-    "สระบุรี",
-  ];
-  List<String> vehicles = [
-    "รถส่วนตัว",
-    "รถสาธารณะ",
-    "เรือ",
-    "เดิน",
-    "รถไฟ",
-  ];
+  List<String> tourTypes = allTourTypes;
+  List<String> convinces = convincesInThai;
+  List<String> vehicles = allVehicleTypes;
 
   Future<bool> createNewTour({
     required String tourName,
@@ -35,7 +24,7 @@ class CreateTourViewModel {
     try {
       newTour = CreateTourModel(
         tourName: tourName,
-        base64Image: base64Encode(imageFile),
+        base64Image: imageFile,
         convinces: convinces,
         vehicle: vehicles,
         tourType: tourType,

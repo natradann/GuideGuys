@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 class RegisterModel {
   late String username;
@@ -6,7 +7,7 @@ class RegisterModel {
   late String password;
   late String firstName;
   late String lastName;
-  late String img;
+  late Uint8List img;
   late String phoneNumber;
 
   RegisterModel({
@@ -25,7 +26,7 @@ class RegisterModel {
         "password": password,
         "first_name": firstName,
         "last_name": lastName,
-        "img": img,
+        "img": base64Encode(img),
         "phone_number": phoneNumber,
       };
 }
@@ -40,12 +41,14 @@ class ResponseRegisterModel {
   String token;
   String userId;
   String username;
+  String email;
   String? myGuideId;
 
   ResponseRegisterModel({
     required this.token,
     required this.userId,
     required this.username,
+    required this.email,
     this.myGuideId,
   });
 
@@ -54,7 +57,8 @@ class ResponseRegisterModel {
         token: json["token"],
         userId: json["user_id"],
         username: json["username"],
-        myGuideId: json["myGuideId"],
+        email: json["email"],
+        myGuideId: json["guide_id"],
       );
 
   Map<String, dynamic> toJson() => {

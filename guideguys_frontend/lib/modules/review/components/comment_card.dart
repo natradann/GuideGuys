@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/star_rate.dart';
 import 'package:guideguys/constants/colors.dart';
@@ -23,9 +25,12 @@ class CommentCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const CircleAvatar(
-                  backgroundImage:
-                      AssetImage('assets/images/blank-profile-picture.png'),
+                CircleAvatar(
+                  backgroundImage: (model.customerImg != null)
+                  ? Image.memory(base64Decode(model.customerImg!))
+                      .image
+                  : const AssetImage('assets/images/blank-profile-picture.png'),
+                 
                 ),
                 const SizedBox(width: 10),
                 Column(

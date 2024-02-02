@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 String paymentModelToJson(PaymentModel data) => json.encode(data.toJson());
 
 class PaymentModel {
   String historyId;
-  String base64Slip;
+  Uint8List base64Slip;
 
   PaymentModel({
     required this.historyId,

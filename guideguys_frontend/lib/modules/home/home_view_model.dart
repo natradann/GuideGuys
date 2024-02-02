@@ -33,6 +33,7 @@ class HomeViewModel {
     List<TourCardLGModel> tagListFiltered = [];
     List<TourCardLGModel> typeTourListFiltered = [];
     List<TourCardLGModel> typeVehicleListFiltered = [];
+    print('feefedd');
     if (tagList.isEmpty && typeTourList.isEmpty && typeVehicleList.isEmpty) {
       return allTours;
     } else if (tagList.isNotEmpty) {
@@ -106,6 +107,9 @@ class HomeViewModel {
                 bool arelanguagesMatch = guide.languages.any((language) =>
                     language.toLowerCase().contains(tagText.toLowerCase()));
 
+                bool areTourNamesMatch = guide.tourNames.any((tourName) =>
+                    tourName.toLowerCase().contains(tagText.toLowerCase()));
+
                 bool areTourTypesMatch = guide.tourTypes.any((tourType) =>
                     tourType.toLowerCase().contains(tagText.toLowerCase()));
 
@@ -115,6 +119,7 @@ class HomeViewModel {
                 return isGuideNameMatch ||
                     areConvincesMatch ||
                     arelanguagesMatch ||
+                    areTourNamesMatch ||
                     areTourTypesMatch ||
                     areVehiclesMatch;
               }))

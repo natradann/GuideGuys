@@ -11,7 +11,6 @@ import 'package:guideguys/modules/register/register_view_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 
-
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
 
@@ -205,6 +204,7 @@ class _RegisterViewState extends State<RegisterView> {
                   if (!mounted) return;
                   if (isCheckedT) {
                     // print(registerResponse);
+                    Navigator.pop(context);
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

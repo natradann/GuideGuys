@@ -1,74 +1,145 @@
-
 import 'package:guideguys/models/tour_card_lg_model.dart';
 import 'package:guideguys/modules/home/home_model.dart';
 // import 'package:guideguys/modules/find_all_list/find_all_list_model.dart';
 
 class FindAllListViewModel {
-  // late List<GuideModel> allGuides;
-  // late List<TourModel> allTours;
+  late List<GuideModel> allGuides;
+  late List<TourCardLGModel> allTours;
   List<String> tagList = [];
+  List<String> typeTourList = [];
+  List<String> typeVehicleList = [];
 
-  // Future<bool> fetchAllInfo({required List<GuideModel> guides, required List<TourModel> tours}) async {
-  //   try {
-  //     allGuides = guides;
-
-  //     allTours = tours;
-  //     return true;
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
-
-  List<TourCardLGModel> filterTours({required List<TourCardLGModel> allTours}) {
-    if (tagList.isEmpty) {
-      return allTours;
+  getData(
+      {List<TourCardLGModel>? allToursData,
+      List<GuideModel>? allGuidesData}) async {
+    try {
+      allGuides = allGuidesData!;
+      allTours = allToursData!;
+    } catch (_) {
+      rethrow;
     }
-    List<TourCardLGModel> tourFiltered = tagList
-        .expand((tagText) => allTours.where((tour) {
-              bool isTourNameMatch =
-                  tour.tourName.toLowerCase().contains(tagText.toLowerCase());
-
-              bool areConvincesMatch = tour.convinces.any((convince) =>
-                  convince.toLowerCase().contains(tagText.toLowerCase()));
-
-              bool arelanguagesMatch = tour.languages.any((language) =>
-                  language.toLowerCase().contains(tagText.toLowerCase()));
-
-              bool areTourTypesMatch = tour.type.any((tourType) =>
-                  tourType.toLowerCase().contains(tagText.toLowerCase()));
-
-              bool areVehiclesMatch = tour.vehicles.any((vehicle) =>
-                  vehicle.toLowerCase().contains(tagText.toLowerCase()));
-              return isTourNameMatch ||
-                  areConvincesMatch ||
-                  arelanguagesMatch ||
-                  areTourTypesMatch ||
-                  areVehiclesMatch;
-            }))
-        .toList();
-    return tourFiltered;
   }
 
-  List<GuideModel> filterGuides({required List<GuideModel> allGuides}) {
-    if (tagList.isEmpty) {
-      return allGuides;
+  List<TourCardLGModel> filterTours() {
+    List<TourCardLGModel> tagListFiltered = [];
+    List<TourCardLGModel> typeTourListFiltered = [];
+    List<TourCardLGModel> typeVehicleListFiltered = [];
+    if (tagList.isEmpty && typeTourList.isEmpty && typeVehicleList.isEmpty) {
+      return allTours;
+    } else if (tagList.isNotEmpty) {
+      tagListFiltered = tagList
+          .expand((tagText) => allTours.where((tour) {
+                bool isTourNameMatch =
+                    tour.tourName.toLowerCase().contains(tagText.toLowerCase());
+
+                bool areConvincesMatch = tour.convinces.any((convince) =>
+                    convince.toLowerCase().contains(tagText.toLowerCase()));
+
+                bool arelanguagesMatch = tour.languages.any((language) =>
+                    language.toLowerCase().contains(tagText.toLowerCase()));
+
+                bool areTourTypesMatch = tour.type.any((tourType) =>
+                    tourType.toLowerCase().contains(tagText.toLowerCase()));
+
+                bool areVehiclesMatch = tour.vehicles.any((vehicle) =>
+                    vehicle.toLowerCase().contains(tagText.toLowerCase()));
+
+                return (isTourNameMatch ||
+                    areConvincesMatch ||
+                    arelanguagesMatch ||
+                    areTourTypesMatch ||
+                    areVehiclesMatch);
+              }))
+          .toList();
+    } else if (typeTourList.isNotEmpty) {
+      typeTourListFiltered = typeTourList
+          .expand((typeText) => allTours.where((tour) {
+                bool areTourTypesMatch = tour.type.any((tourType) =>
+                    tourType.toLowerCase().contains(typeText.toLowerCase()));
+
+                return areTourTypesMatch;
+              }))
+          .toList();
+    } else if (typeVehicleList.isNotEmpty) {
+      typeVehicleListFiltered = typeVehicleList
+          .expand((vehicleText) => allTours.where((tour) {
+                bool areVehiclesMatch = tour.vehicles.any((vehicle) =>
+                    vehicle.toLowerCase().contains(vehicleText.toLowerCase()));
+
+                return areVehiclesMatch;
+              }))
+          .toList();
     }
-    List<GuideModel> guideFiltered = tagList
-        .expand((tagText) => allGuides.where((guide) {
-              bool isGuideNameMatch =
-                  guide.guideName.toLowerCase().contains(tagText.toLowerCase());
 
-              bool areConvincesMatch = guide.convinces.any((convince) =>
-                  convince.toLowerCase().contains(tagText.toLowerCase()));
+    return {
+      ...tagListFiltered,
+      ...typeTourListFiltered,
+      ...typeVehicleListFiltered
+    }.toSet().toList();
+  }
 
-              bool arelanguagesMatch = guide.languages.any((language) =>
-                  language.toLowerCase().contains(tagText.toLowerCase()));
+  List<GuideModel> filterGuides() {
+    List<GuideModel> tagListFiltered = [];
+    List<GuideModel> typeTourListFiltered = [];
+    List<GuideModel> typeVehicleListFiltered = [];
+    if (tagList.isEmpty && typeTourList.isEmpty && typeVehicleList.isEmpty) {
+      return allGuides;
+    } else if (tagList.isNotEmpty) {
+      tagListFiltered = tagList
+          .expand((tagText) => allGuides.where((guide) {
+                bool isGuideNameMatch = guide.guideName
+                    .toLowerCase()
+                    .contains(tagText.toLowerCase());
 
-              return isGuideNameMatch || areConvincesMatch || arelanguagesMatch;
-            }))
-        .toSet()
-        .toList();
-    return guideFiltered;
+                bool areConvincesMatch = guide.convinces.any((convince) =>
+                    convince.toLowerCase().contains(tagText.toLowerCase()));
+
+                bool arelanguagesMatch = guide.languages.any((language) =>
+                    language.toLowerCase().contains(tagText.toLowerCase()));
+
+                bool areTourNamesMatch = guide.tourNames.any((tourName) =>
+                    tourName.toLowerCase().contains(tagText.toLowerCase()));
+
+                bool areTourTypesMatch = guide.tourTypes.any((tourType) =>
+                    tourType.toLowerCase().contains(tagText.toLowerCase()));
+
+                bool areVehiclesMatch = guide.allVehicles.any((vehicle) =>
+                    vehicle.toLowerCase().contains(tagText.toLowerCase()));
+
+                return isGuideNameMatch ||
+                    areConvincesMatch ||
+                    arelanguagesMatch ||
+                    areTourNamesMatch ||
+                    areTourTypesMatch ||
+                    areVehiclesMatch;
+              }))
+          .toSet()
+          .toList();
+    } else if (typeTourList.isNotEmpty) {
+      typeTourListFiltered = typeTourList
+          .expand((typeText) => allGuides.where((tour) {
+                bool areTourTypesMatch = tour.tourTypes.any((tourType) =>
+                    tourType.toLowerCase().contains(typeText.toLowerCase()));
+
+                return areTourTypesMatch;
+              }))
+          .toList();
+    } else if (typeVehicleList.isNotEmpty) {
+      typeVehicleListFiltered = typeVehicleList
+          .expand((vehicleText) => allGuides.where((tour) {
+                bool areVehiclesMatch = tour.allVehicles.any((vehicle) =>
+                    vehicle.toLowerCase().contains(vehicleText.toLowerCase()));
+
+                return areVehiclesMatch;
+              }))
+          .toList();
+    }
+
+    return {
+      ...tagListFiltered,
+      ...typeTourListFiltered,
+      ...typeVehicleListFiltered
+    }.toSet().toList();
   }
 
   Future<bool> addTag({required String newTag}) async {

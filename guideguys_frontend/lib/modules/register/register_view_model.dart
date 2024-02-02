@@ -26,15 +26,18 @@ class RegisterViewModel {
         password: password,
         firstName: firstName,
         lastName: lastName,
-        img: base64Encode(userImage),
+        img: userImage,
         phoneNumber: phoneNumber,
       );
-      ResponseRegisterModel res = await service.createAccount(regisInfo: userModel);
-      
+      ResponseRegisterModel res =
+          await service.createAccount(regisInfo: userModel);
+
       SecureStorage().writeSecureData('myToken', res.token);
       SecureStorage().writeSecureData('myUserId', res.userId);
       SecureStorage().writeSecureData('myUsername', res.username);
+      SecureStorage().writeSecureData('myEmail', res.email);
       SecureStorage().writeSecureData('myGuideId', res.myGuideId ?? 'tourist');
+      print(await SecureStorage().readSecureData('myGuideId'));
 
       return true;
     } catch (_) {

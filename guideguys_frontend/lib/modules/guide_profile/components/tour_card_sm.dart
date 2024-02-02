@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:guideguys/components/star_rate.dart';
 import 'package:guideguys/constants/colors.dart';
@@ -54,12 +56,18 @@ class TourCardSM extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    'assets/images/blank-profile-picture.png',
-                    height: cardHeight * 0.5,
-                    width: cardWidth,
+                  Image.memory(
+                    base64Decode(model.tourImgPath!),
+                    height: cardHeight * 0.56,
+                    width: screenWidth,
                     fit: BoxFit.cover,
                   ),
+                  // Image.asset(
+                  //   'assets/images/blank-profile-picture.png',
+                  //   height: cardHeight * 0.5,
+                  //   width: cardWidth,
+                  //   fit: BoxFit.cover,
+                  // ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: Column(
@@ -93,7 +101,7 @@ class TourCardSM extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(10, 2, 10, 10),
+                padding: const EdgeInsets.fromLTRB(10, 1, 10, 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

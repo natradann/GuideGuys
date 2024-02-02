@@ -8,7 +8,7 @@ String chatRoomListModelToJson(List<ChatRoomListModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ChatRoomListModel {
-  int roomId;
+  String roomId;
   String user1Id;
   String user1Username;
   String user2Id;
@@ -29,7 +29,7 @@ class ChatRoomListModel {
   factory ChatRoomListModel.fromJson(Map<String, dynamic> json) {
     try {
       return ChatRoomListModel(
-        roomId: json["room_id"],
+        roomId: json["room_id"].toString(),
         user1Id: json["user1_id"],
         user1Username: json["user1_username"],
         user2Id: json["user2_id"],

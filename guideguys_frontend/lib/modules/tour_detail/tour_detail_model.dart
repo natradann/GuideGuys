@@ -43,18 +43,10 @@ class TourDetailModel {
         guideImage: (json['guide_img'] != null) ? json['guide_img'] : null,
         guideUserId: json['user_id'],
         guideId: json['tour_guide_id'],
-        languages: (jsonDecode(json['guide_languages']) as List<dynamic>)
-            .map<String>((language) => language.toString())
-            .toList(),
-        convinces: (jsonDecode(json['tour_convinces']) as List<dynamic>)
-            .map<String>((convince) => convince.toString())
-            .toList(),
-        vehicle: (jsonDecode(json['tour_vehicles']) as List<dynamic>)
-            .map<String>((vehicle) => vehicle.toString())
-            .toList(),
-        type: (jsonDecode(json['tour_type']) as List<dynamic>)
-            .map<String>((type) => type.toString())
-            .toList(),
+        languages: List<String>.from(json["guide_languages"].split(',').map((x) => x)),
+        convinces: List<String>.from(json["tour_convinces"].split(',').map((x) => x)),
+        vehicle: List<String>.from(json["tour_vehicles"].split(',').map((x) => x)),
+        type: List<String>.from(json["tour_type"].split(',').map((x) => x)),
         tourDetail: json['tour_detail'],
         tourPrice: json['tour_price'],
         tourPoint: json['tour_point'].toDouble(),

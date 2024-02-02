@@ -69,7 +69,7 @@ class GuideInfoModel {
         guideId: json["guideId"],
         guideName: json["guideName"],
         cardNo: json["CardNo"],
-        languages: List<String>.from(json["languages"].map((x) => x)),
+        languages: List<String>.from(json["languages"].split(',').map((x) => x)),
         tour: List<TourModel>.from(json["tour"].map((x) => TourModel.fromJson(x))),
     );
 

@@ -146,7 +146,6 @@ class _GuideProfileViewState extends State<GuideProfileView> {
                           MaterialPageRoute(
                             builder: (context) => ChatView(
                               receiverId: _viewModel.guideProfile.guideUserId,
-                              role: 'tourist',
                             ),
                           ),
                         );
@@ -210,15 +209,8 @@ class _GuideProfileViewState extends State<GuideProfileView> {
                 fontSize: 25,
               ),
             ),
-            Row(
-              children: [
-                StarRate(
-                    sizeStar: 20,
-                    pointRate: _viewModel.guideProfile.guidePoint),
-                const SizedBox(width: 10),
-                const Text('2 รีวิว'),
-              ],
-            ),
+            StarRate(
+                sizeStar: 20, pointRate: _viewModel.guideProfile.guidePoint),
             Row(
               children: [
                 const Icon(Icons.person, color: grey700),
@@ -242,43 +234,33 @@ class _GuideProfileViewState extends State<GuideProfileView> {
                 Text('เลขบัตรไกด์: ${_viewModel.guideProfile.guideCardNo}'),
               ],
             ),
-            Text(_viewModel.guideProfile.guideCardType),
+            // Text(_viewModel.guideProfile.guideCardType),
             Text(
                 'วันหมดอายุ: ${DateFormat.yMd().format(_viewModel.guideProfile.cardExpired)}'),
-            Row(
-              children: [
-                const Icon(
-                  Icons.pin_drop_outlined,
-                  color: grey700,
-                ),
-                const SizedBox(width: 5),
-                Wrap(
-                  spacing: 2,
-                  children: _viewModel.guideProfile.convinces
-                      .map((item) => Text(
-                            item,
-                          ))
-                      .toList(),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.language,
-                  color: grey700,
-                ),
-                const SizedBox(width: 5),
-                Wrap(
-                  spacing: 2,
-                  children: _viewModel.guideProfile.languages
-                      .map((item) => Text(
-                            item,
-                          ))
-                      .toList(),
-                ),
-              ],
-            ),
+            const SizedBox(width: 5),
+            Wrap(spacing: 2, children: [
+              const Icon(
+                Icons.pin_drop_outlined,
+                color: grey700,
+              ),
+              ..._viewModel.guideProfile.convinces
+                  .map((item) => Text(
+                        item,
+                      ))
+                  .toList(),
+            ]),
+            const SizedBox(width: 5),
+            Wrap(spacing: 2, children: [
+              const Icon(
+                Icons.language,
+                color: grey700,
+              ),
+              ..._viewModel.guideProfile.languages
+                  .map((item) => Text(
+                        item,
+                      ))
+                  .toList(),
+            ]),
           ],
         ),
       ),

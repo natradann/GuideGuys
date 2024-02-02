@@ -22,7 +22,7 @@ const createTour = async (req: Request, res: Response, next: NextFunction) => {
         await tourRepository.save({
             name: newTour.tourName,
             guide: guideMatch.guide_id,
-            img: Buffer.from(newTour.img, 'base64'),
+            img: Buffer.from(req.files[0].buffer),
             convinces: newTour.convinces,
             vehicle: newTour.vehicle,
             type: newTour.tourType,

@@ -13,10 +13,13 @@ class ChatModel {
     required this.receiverUsername,
   });
 
-  factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
-        roomId: json["room_id"].toString(),
-        receiverUsername: json["receiver_username"],
-      );
+  factory ChatModel.fromJson(Map<String, dynamic> json) {
+    print(json);
+    return ChatModel(
+      roomId: json["room_id"].toString(),
+      receiverUsername: json["receiver_username"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "room_id": roomId,
@@ -27,7 +30,8 @@ class ChatModel {
 WaitingConfirmCardModel waitingConfirmCardFromJson(String str) =>
     WaitingConfirmCardModel.fromJson(json.decode(str));
 
-String waitingConfirmCardToJson(WaitingConfirmCardModel data) => json.encode(data.toJson());
+String waitingConfirmCardToJson(WaitingConfirmCardModel data) =>
+    json.encode(data.toJson());
 
 class WaitingConfirmCardModel {
   int historyId;
@@ -124,13 +128,15 @@ class NewMeassageModel {
     required this.senderId,
   });
 
-  factory NewMeassageModel.fromJson(Map<String, dynamic> json) =>
-      NewMeassageModel(
-        chatRoom: json["chatRoom"],
-        msgText: json["msgText"],
-        createAt: DateTime.parse(json["createAt"]),
-        senderId: json["senderId"],
-      );
+  factory NewMeassageModel.fromJson(Map<String, dynamic> json) {
+    print(DateTime.parse(json["createAt"]));
+    return NewMeassageModel(
+      chatRoom: json["chatRoom"],
+      msgText: json["msgText"],
+      createAt: DateTime.parse(json["createAt"]),
+      senderId: json["senderId"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "chatRoom": chatRoom,

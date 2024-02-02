@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class TravelHistoryService implements TravelHistoryServiceInterface {
 
   @override
-  Future<List<TravelHistoryModel>> fetchTravelHistory() async {
+  Future<TravelHistoryModel> fetchTravelHistory() async {
     String token = await SecureStorage().readSecureData('myToken');
     try {
       http.Response response = await http.get(
@@ -20,12 +20,9 @@ class TravelHistoryService implements TravelHistoryServiceInterface {
         },
       );
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['allHistory']
-            .map<TravelHistoryModel>(
-                (history) => TravelHistoryModel.fromJson(history))
-            .toList();
+        return travelHistoryModelFromJson(response.body);
       } else if (response.statusCode == 404) {
-        return [];
+        return travelHistoryModelFromJson(response.body);
       } else if (response.statusCode == 500) {
         throw Exception("Internal Server Error");
       } else {

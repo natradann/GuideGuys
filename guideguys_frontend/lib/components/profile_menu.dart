@@ -36,26 +36,26 @@ class ProfileMenu extends StatelessWidget {
                 children: [
                   profileInfo(width, myUsername, myEmail),
                   const SeperateLine(),
-                  profileMenuCardList(
-                    width: width,
-                    cardIcon: Icons.person,
-                    cardTitle: 'Edit Profile',
-                    onPressed: () {},
-                  ),
-                  const SeperateLine(),
-                  profileMenuCardList(
-                    width: width,
-                    cardIcon: Icons.settings,
-                    cardTitle: 'Settings',
-                    onPressed: () {},
-                  ),
-                  const SeperateLine(),
-                  profileMenuCardList(
-                    width: width,
-                    cardIcon: Icons.work,
-                    cardTitle: 'Work History',
-                    onPressed: () {},
-                  ),
+                  // profileMenuCardList(
+                  //   width: width,
+                  //   cardIcon: Icons.person,
+                  //   cardTitle: 'Edit Profile',
+                  //   onPressed: () {},
+                  // ),
+                  // const SeperateLine(),
+                  // profileMenuCardList(
+                  //   width: width,
+                  //   cardIcon: Icons.settings,
+                  //   cardTitle: 'Settings',
+                  //   onPressed: () {},
+                  // ),
+                  // const SeperateLine(),
+                  // profileMenuCardList(
+                  //   width: width,
+                  //   cardIcon: Icons.work,
+                  //   cardTitle: 'Work History',
+                  //   onPressed: () {},
+                  // ),
                   const SeperateLine(),
                   profileMenuCardList(
                     width: width,

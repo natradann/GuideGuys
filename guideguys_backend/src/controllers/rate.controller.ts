@@ -17,7 +17,7 @@ const addReview = async (req: Request, res: Response, next: NextFunction) => {
 
         const historyRepository = AppDataSource.getRepository(History);
 
-        await historyRepository.update({id: newRate.history_id}, {status: "complete"});
+        await historyRepository.update({id: newRate.history_id}, {status: "3"});
 
         const historyMatch = await historyRepository.createQueryBuilder("history")
         .innerJoinAndSelect('history.tour', 'tour')
@@ -35,8 +35,6 @@ const addReview = async (req: Request, res: Response, next: NextFunction) => {
         .select(["tour.id", "rate"])
         .where("tour.id = :tourId", {tourId: tourId})
         .getOne();
-
-        console.log('dv');
 
         
         let sumTourRate = 0;
@@ -75,6 +73,7 @@ const addReview = async (req: Request, res: Response, next: NextFunction) => {
                 sumGuideRate += guideRateMath.tour[index].point;
                 console.log(sumGuideRate);
             }
+            console.log(sumGuideRate)
 
             avgGuideRate = Number((sumGuideRate/guideRateMath.tour.length).toFixed(2));
             console.log("Length of rate array:", guideRateMath.tour.length);
@@ -105,20 +104,29 @@ const addReview = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const getReviewByTourId = async (req: Request, res: Response, next: NextFunction) => {
-    
     try {
-        console.log('mk');
         const tourRepository = AppDataSource.getRepository(Tour);
         const allRateOfTourMatch = await tourRepository.createQueryBuilder("tour")
         .leftJoinAndSelect('tour.rate', 'rate')
         .leftJoinAndSelect('rate.user_id', 'user')
-        .select(['tour.id', 'tour.name', 'tour.point', 'rate', 'user.id', 'user.username'])
+        .select(['tour.id', 'tour.name', 'tour.img', 'tour.point', 'rate', 'user.id', 'user.username', 'user.img'])
         .where("tour.id = :tourId", {tourId: req.params.tourId})
         .getOne();
 
         if (allRateOfTourMatch != null) {
+            console.log(allRateOfTourMatch.rate)
             return res.status(200).json({
-            allRateOfTourMatch
+                id: allRateOfTourMatch.id,
+                name: allRateOfTourMatch.name,
+                image: Buffer.from(allRateOfTourMatch.img).toString('base64'),
+                point: allRateOfTourMatch.point,
+                rate: allRateOfTourMatch.rate.map((rateinfo) => ({
+                    rate_id: rateinfo.id,
+                    point: rateinfo.point,
+                    comment: rateinfo.comment,
+                    comment_date: rateinfo.comment_date,
+                    user_id: rateinfo.user_id,
+                }))
             });
         } else {
             return res.status(401).json({

@@ -17,7 +17,7 @@ class ReviewService implements ReviewServiceInterface {
 
     if (response.statusCode == 200) {
       return ReviewModel.fromJson(
-          jsonDecode(response.body)['allRateOfTourMatch']);
+          jsonDecode(response.body));
     } else if (response.statusCode == 500) {
       throw Exception("Internal Server Error");
     } else {

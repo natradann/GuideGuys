@@ -21,10 +21,12 @@ double screenHeight(BuildContext context) {
 class ConfirmGuideDetailView extends StatefulWidget {
   const ConfirmGuideDetailView({
     required this.historyId,
+    required this.status,
     super.key,
   });
 
   final String historyId;
+  final String status;
 
   @override
   State<ConfirmGuideDetailView> createState() => _ConfirmGuideDetailViewState();
@@ -75,10 +77,10 @@ class _ConfirmGuideDetailViewState extends State<ConfirmGuideDetailView> {
                             startDate: _viewModel.formDetail.startDate,
                             endDate: _viewModel.formDetail.endDate,
                             price: _viewModel.formDetail.price,
+                            status: widget.status,
                             screenWidth: width,
                             onPressed: () {},
                           ),
-                          upperComfirmDetail(width),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                             child: Column(
@@ -117,29 +119,32 @@ class _ConfirmGuideDetailViewState extends State<ConfirmGuideDetailView> {
                                     const SizedBox(height: 15),
                                   ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: PurpleWhitePairButton(
-                                    whiteButtonText: "กลับ",
-                                    purpleButtonText: "ต่อไป",
-                                    whiteButtonFn: () {
-                                      Navigator.pop(context);
-                                    },
-                                    purpleButtonFn: () {
-                                      Navigator.pop(context);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PaymentView(
-                                            historyId: widget.historyId,
-                                            // receiverId: widget.receiverId!,
-                                            // receiverUsername: widget.receiverUsername,
-                                          ),
+                                (widget.status == '0' || widget.status == '2')
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(20),
+                                        child: PurpleWhitePairButton(
+                                          whiteButtonText: "กลับ",
+                                          purpleButtonText: "ต่อไป",
+                                          whiteButtonFn: () {
+                                            Navigator.pop(context);
+                                          },
+                                          purpleButtonFn: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PaymentView(
+                                                  historyId: widget.historyId,
+                                                  
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         ),
-                                      );
-                                    },
-                                  ),
-                                ),
+                                      )
+                                    : const SizedBox(),
+                                // (_viewModel.formDetail.guideUsername == _viewModel.myUsername) ,
                               ],
                             ),
                           ),
@@ -199,32 +204,32 @@ class _ConfirmGuideDetailViewState extends State<ConfirmGuideDetailView> {
           style: detailTitle,
         ),
         Row(
-          children: const [
-            Text(
+          children: [
+            const Text(
               "วันที่นัดหมาย: ",
               style: detailTitle,
             ),
-            Text(style: detailText, "6 ตุลาคม 2566"),
+            Text(style: detailText, DateFormat.yMd().format(_viewModel.formDetail.aptDate)),
           ],
         ),
         Row(
-          children: const [
-            Text(
+          children: [
+            const Text(
               "สถานที่นัดหมาย: ",
               style: detailTitle,
             ),
-            Text(style: detailText, "Central Ladprao"),
+            Text(style: detailText, _viewModel.formDetail.aptPlace),
           ],
         ),
-        Row(
-          children: const [
-            Text(
-              "หมายเหตุ*: ",
-              style: detailTitle,
-            ),
-            Text(style: detailText, "Central Ladprao"),
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     const Text(
+        //       "หมายเหตุ*: ",
+        //       style: detailTitle,
+        //     ),
+        //     Text(style: detailText, _viewModel.formDetail.aptPlace),
+        //   ],
+        // ),
       ],
     );
   }
@@ -342,76 +347,6 @@ class _ConfirmGuideDetailViewState extends State<ConfirmGuideDetailView> {
           ],
         ),
       ],
-    );
-  }
-
-  Container upperComfirmDetail(double width) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      decoration: BoxDecoration(
-          color: white,
-          border: Border(bottom: BorderSide(color: Colors.grey.shade300))),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                _viewModel.formDetail.tourName,
-                style: TextStyle(
-                  color: black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: width * 0.035,
-                ),
-              ),
-              Text(
-                'รอการรีวิว',
-                style: TextStyle(
-                  color: Colors.purple,
-                  fontWeight: FontWeight.w500,
-                  fontSize: width * 0.03,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _viewModel.formDetail.guideUsername,
-                style: TextStyle(
-                  color: black,
-                  fontSize: width * 0.025,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${DateFormat.yMEd().format(_viewModel.formDetail.startDate)} - ${DateFormat.yMEd().format(_viewModel.formDetail.endDate)}',
-                style: TextStyle(
-                  color: black,
-                  fontSize: width * 0.025,
-                ),
-              ),
-              Text(
-                '${_viewModel.formDetail.price} บาท',
-                style: TextStyle(
-                  color: black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: width * 0.03,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

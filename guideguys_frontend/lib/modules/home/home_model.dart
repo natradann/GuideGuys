@@ -6,6 +6,7 @@ class GuideModel {
   late String? guideImg;
   late List<String> convinces;
   late List<String> languages;
+  late List<String> tourNames;
   late List<String> tourTypes;
   late List<String> allVehicles;
   late double ratePoint;
@@ -16,20 +17,23 @@ class GuideModel {
     this.guideImg,
     required this.convinces,
     required this.languages,
+    required this.tourNames,
     required this.tourTypes,
     required this.allVehicles,
     required this.ratePoint,
   });
 
   factory GuideModel.fromJson(Map<String, dynamic> json) {
-    print(json['guide_convinces']);
     try {
       GuideModel guide = GuideModel(
         guideId: json['guide_id'],
         guideName: json['username'],
-        guideImg: (json['guide_img'] != null) ? json['guide_img'] : null,
-        convinces: List<String>.from(json["guide_convinces"].map((x) => x)),
-        languages: List<String>.from(json["guide_languages"].map((x) => x)),
+        guideImg: json['guide_img'],
+        convinces:
+            List<String>.from(json["guide_convinces"].split(',').map((x) => x)),
+        languages:
+            List<String>.from(json["guide_languages"].split(',').map((x) => x)),
+        tourNames: List<String>.from(json["guide_tour_name"].map((x) => x)),
         tourTypes: List<String>.from(json["guide_tour_type"].map((x) => x)),
         allVehicles: List<String>.from(json["guide_vehicle"].map((x) => x)),
         ratePoint: json['guide_point'].toDouble(),

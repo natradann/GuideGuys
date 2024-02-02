@@ -188,6 +188,12 @@ class _CreateTourViewState extends State<CreateTourView> {
                           textController: tourDetail,
                           inputAction: TextInputAction.none,
                           minLineAmount: 5,
+                          onTextChenged: (value) {
+                            tourDetail = TextEditingController(text: value);
+                            setState(() {
+                              _viewModel.newTour.detail = value;
+                            });
+                          },
                         ),
                         const SizedBox(height: 20),
                         PurpleWhitePairButton(

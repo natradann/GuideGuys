@@ -62,88 +62,85 @@ class _ReviewTourViewState extends State<ReviewTourView> {
         appBar: CustomAppBar(
           appBarKey: _scaffoldKey,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Image.asset(
-                    "assets/images/blank-profile-picture.png",
-                    height: height * 0.3,
-                    width: width,
-                    fit: BoxFit.cover,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                // Image.asset(
+                //   "assets/images/blank-profile-picture.png",
+                //   height: height * 0.3,
+                //   width: width,
+                //   fit: BoxFit.cover,
+                // ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.tourName,
+                        style: const TextStyle(
+                          color: textPurple,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'ให้คะแนน (เต็ม 5)',
+                        style: TextStyle(
+                          color: black,
+                        ),
+                      ),
+                      rateStarInput(width),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        child: TextFieldSM(
+                          labelTFF: 'แสดงความคิดเห็น',
+                          hintTextinTFF: 'เขียนรีวิวโปรแกรมทัวร์',
+                          textController: commentTour,
+                          minLineAmount: 8,
+                          inputType: TextInputType.multiline,
+                          inputAction: TextInputAction.done,
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.tourName,
-                          style: const TextStyle(
-                            color: textPurple,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'ให้คะแนน (เต็ม 5)',
-                          style: TextStyle(
-                            color: black,
-                          ),
-                        ),
-                        rateStarInput(width),
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: MediaQuery.of(context).viewInsets,
-                          child: TextFieldSM(
-                            labelTFF: 'แสดงความคิดเห็น',
-                            hintTextinTFF: 'เขียนรีวิวโปรแกรมทัวร์',
-                            textController: commentTour,
-                            minLineAmount: 8,
-                            inputType: TextInputType.multiline,
-                            inputAction: TextInputAction.done,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: PurpleWhitePairButton(
-                  whiteButtonText: 'ยกเลิก',
-                  purpleButtonText: 'ยืนยัน',
-                  whiteButtonFn: () {
-                    Navigator.pop(context);
-                  },
-                  purpleButtonFn: () async {
-                    Navigator.pop(context);
-                    bool isSavedReview = await _viewModel.saveReviewTour(
-                      historyId: widget.historyId,
-                      userId: '2a463610-31f5-44d8-8ed6-30457b27cbd7',
-                      tourId: widget.tourId,
-                      point: starPoint,
-                      comment: commentTour.text,
-                    );
-                    if (isSavedReview && mounted) {
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TravelHistoryView(),
-                        ),
-                      );
-                    }
-                  },
                 ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: PurpleWhitePairButton(
+                whiteButtonText: 'ยกเลิก',
+                purpleButtonText: 'ยืนยัน',
+                whiteButtonFn: () {
+                  Navigator.pop(context);
+                },
+                purpleButtonFn: () async {
+                  Navigator.pop(context);
+                  bool isSavedReview = await _viewModel.saveReviewTour(
+                    historyId: widget.historyId,
+                    tourId: widget.tourId,
+                    point: starPoint,
+                    comment: commentTour.text,
+                  );
+                  if (isSavedReview && mounted) {
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TravelHistoryView(),
+                      ),
+                    );
+                  }
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

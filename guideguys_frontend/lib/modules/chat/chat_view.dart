@@ -24,12 +24,10 @@ double screenHeight(BuildContext context) {
 class ChatView extends StatefulWidget {
   const ChatView({
     required this.receiverId,
-    required this.role,
     super.key,
   });
 
   final String receiverId;
-  final String role;
 
   @override
   State<ChatView> createState() => _ChatViewState();
@@ -180,7 +178,7 @@ class _ChatViewState extends State<ChatView>with AutomaticKeepAliveClientMixin {
                             children: [
                               Text(message.messageText),
                               Text(
-                                DateFormat('hh:mm a').format(message.sentAt),
+                                DateFormat('dd/MM/yyyy HH:mm').format(message.sentAt),
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ],
@@ -216,6 +214,7 @@ class _ChatViewState extends State<ChatView>with AutomaticKeepAliveClientMixin {
                           builder: (context) => ConfirmGuideDetailView(
                             historyId:
                                 _viewModel.waitingForm!.historyId.toString(),
+                                status: _viewModel.waitingForm!.status,
                           ),
                         ),
                       );
@@ -231,7 +230,7 @@ class _ChatViewState extends State<ChatView>with AutomaticKeepAliveClientMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    (widget.role == 'guide')
+                    (_viewModel.roleUser != 'tourist')
                         ? IconButton(
                             padding: EdgeInsets.zero,
                             icon: const Icon(Icons.edit_document),

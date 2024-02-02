@@ -43,9 +43,7 @@ class ConfirmGuideDetailModel {
       guideCardNo: json["guideCardNo"],
       guideUsername: json["guideUsername"],
       guideName: json["guideName"],
-      languages: (json['languages'] as List<dynamic>)
-            .map<String>((language) => language.toString())
-            .toList(),
+      languages: List<String>.from(json["languages"].split(',').map((x) => x)),
       tourName: json["tourName"],
       startDate: DateTime.parse(json["startDate"]),
       endDate: DateTime.parse(json["endDate"]),
