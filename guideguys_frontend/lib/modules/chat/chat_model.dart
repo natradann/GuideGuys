@@ -14,7 +14,6 @@ class ChatModel {
   });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) {
-    print(json);
     return ChatModel(
       roomId: json["room_id"].toString(),
       receiverUsername: json["receiver_username"],

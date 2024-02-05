@@ -126,22 +126,6 @@ class _ReviewViewState extends State<ReviewView> {
                       },
                     ),
                   ),
-                  // const CommentCard(),
-                  // const Padding(
-                  //   padding: EdgeInsets.symmetric(horizontal: 10),
-                  //   child: SeperateLine(),
-                  // ),
-                  // const CommentCard(),
-                  // const Padding(
-                  //   padding: EdgeInsets.symmetric(horizontal: 10),
-                  //   child: SeperateLine(),
-                  // ),
-                  // const CommentCard(),
-                  // const Padding(
-                  //   padding: EdgeInsets.symmetric(horizontal: 10),
-                  //   child: SeperateLine(),
-                  // ),
-                  // const CommentCard(),
                 ],
               );
             } else if (snapshot.hasError) {

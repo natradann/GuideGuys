@@ -36,6 +36,8 @@ const addReview = async (req: Request, res: Response, next: NextFunction) => {
         .where("tour.id = :tourId", {tourId: tourId})
         .getOne();
 
+        console.log(tourRateMatch)
+
         
         let sumTourRate = 0;
         let avgTourRate: number;
@@ -73,13 +75,13 @@ const addReview = async (req: Request, res: Response, next: NextFunction) => {
                 sumGuideRate += guideRateMath.tour[index].point;
                 console.log(sumGuideRate);
             }
-            console.log(sumGuideRate)
+            console.log(guideId)
 
             avgGuideRate = Number((sumGuideRate/guideRateMath.tour.length).toFixed(2));
             console.log("Length of rate array:", guideRateMath.tour.length);
             console.log("average of points:", avgGuideRate);
 
-            await guideRepository.update({id: newRate.guide_id}, {point: avgGuideRate});
+            await guideRepository.update({id: guideId}, {point: avgGuideRate});
         } else {
             logging.info(NAMESPACE, "No rate information found or rate is not an array.")
 

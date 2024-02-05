@@ -27,10 +27,7 @@ const getChatRoom = async (req: Request, res: Response, next: NextFunction) => {
             })
         )
         .getOne();
-
         
-        
-
         if(chatRoom != null) {
             if(chatRoom.user1.id == chatUsers.receiverId) {
                 const chatRoomDetail = {
@@ -52,7 +49,17 @@ const getChatRoom = async (req: Request, res: Response, next: NextFunction) => {
             user2: chatUsers.receiverId
         });
 
-        return res.status(200).json(newChatRoom.room_id);
+        const userRepository = AppDataSource.getRepository(User)
+        const receiver = await userRepository.findOne({
+            where: {
+                id: chatUsers.receiverId
+            }
+        })
+
+        return res.status(200).json({
+            "room_id": newChatRoom.room_id,
+            "receiver_username": receiver.username,
+        });
     } catch(error) {
         logging.error(NAMESPACE, error.message, error);
 
