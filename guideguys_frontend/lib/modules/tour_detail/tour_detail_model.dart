@@ -35,6 +35,7 @@ class TourDetailModel {
 
   factory TourDetailModel.fromJson(Map<String, dynamic> json) {
     try {
+      print(json["guide_languages"].runtimeType);
       TourDetailModel tourDetail = TourDetailModel(
         tourId: json['tour_id'].toString(),
         tourName: json['tour_name'],
@@ -43,9 +44,12 @@ class TourDetailModel {
         guideImage: (json['guide_img'] != null) ? json['guide_img'] : null,
         guideUserId: json['user_id'],
         guideId: json['tour_guide_id'],
-        languages: List<String>.from(json["guide_languages"].split(',').map((x) => x)),
-        convinces: List<String>.from(json["tour_convinces"].split(',').map((x) => x)),
-        vehicle: List<String>.from(json["tour_vehicles"].split(',').map((x) => x)),
+        languages:
+            List<String>.from(json["guide_languages"].split(',').map((x) => x)),
+        convinces:
+            List<String>.from(json["tour_convinces"].split(',').map((x) => x)),
+        vehicle:
+            List<String>.from(json["tour_vehicles"].split(',').map((x) => x)),
         type: List<String>.from(json["tour_type"].split(',').map((x) => x)),
         tourDetail: json['tour_detail'],
         tourPrice: json['tour_price'],

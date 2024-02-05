@@ -53,25 +53,21 @@ const getAllTours = async (req: Request, res: Response, next: NextFunction) => {
         "tour.convinces", "tour.vehicle", "tour.type", 
         "tour.price", "tour.point", "guide.languages"])
         // .where("tour.id = :tourId", {tourId: 6})
-        .getRawMany();
+        .getMany();
 
 
         return res.status(200).json(
             allTours.map((tour) => ({
-                "tour_id": tour.tour_id,
-                "tour_name": tour.tour_name,
-                "tour_img": tour.tour_img != null ? Buffer.from(tour.tour_img).toString('base64') : null,
-                "user_id": tour.user_id,
-                "user_username": tour.user_username,
-                "guide_languages": tour.guide_languages,
-                "tour_convinces": tour.tour_convinces,
-                "tour_vehicles": tour.tour_vehicle,
-                "tour_type": tour.tour_type,
-                "tour_detail": tour.tour_detail,
-                "tour_price": tour.tour_price,
-                "tour_point": tour.tour_point,
-                "tour_created_at": tour.tour_created_at,
-                "tour_guide_id": tour.tour_guide_id
+                "tour_id": tour.id,
+                "tour_name": tour.name,
+                "tour_img": tour.img != null ? Buffer.from(tour.img).toString('base64') : null,
+                "guide_languages": tour.guide.languages,
+                "tour_convinces": tour.convinces,
+                "tour_vehicles": tour.vehicle,
+                "tour_type": tour.type,
+                "tour_detail": tour.detail,
+                "tour_price": tour.price,
+                "tour_point": tour.point,
             }))
         )
     } catch (error) {
@@ -91,26 +87,26 @@ const getTourDetailByTourId = async (req: Request, res: Response, next: NextFunc
         const tourDetail = await userRepository.createQueryBuilder("user")
         .leftJoinAndSelect("user.guide", "guide")
         .leftJoinAndSelect("guide.tour", "tour")
-        .select(["user.id", "user.username", "user.img", "guide.languages", "tour"])
+        .select(["user.id", "user.username", "user.img", "guide.id", "guide.languages", "tour"])
         .where("tour.id = :tourId", {tourId: req.params.tourId})
-        .getRawOne();
+        .getOne();
 
         return res.status(200).json({
-            "tour_id": tourDetail.tour_id,
-            "tour_name": tourDetail.tour_name,
-            "tour_img": (tourDetail.tour_img != null) ? Buffer.from(tourDetail.tour_img).toString('base64') : null,
-            "user_id": tourDetail.user_id,
-            "user_username": tourDetail.user_username,
-            "guide_img": (tourDetail.user_img != null) ? Buffer.from(tourDetail.user_img).toString('base64') : null,
-            "guide_languages": tourDetail.guide_languages,
-            "tour_convinces": tourDetail.tour_convinces,
-            "tour_vehicles": tourDetail.tour_vehicle,
-            "tour_type": tourDetail.tour_type,
-            "tour_detail": tourDetail.tour_detail,
-            "tour_price": tourDetail.tour_price,
-            "tour_point": tourDetail.tour_point,
-            "tour_created_at": tourDetail.tour_created_at,
-            "tour_guide_id": tourDetail.tour_guide_id
+            "tour_id": tourDetail.guide.tour[0].id,
+            "tour_name": tourDetail.guide.tour[0].name,
+            "tour_img": (tourDetail.guide.tour[0].img != null) ? Buffer.from(tourDetail.guide.tour[0].img).toString('base64') : null,
+            "user_id": tourDetail.id,
+            "user_username": tourDetail.username,
+            "guide_img": (tourDetail.img != null) ? Buffer.from(tourDetail.img).toString('base64') : null,
+            "guide_languages": tourDetail.guide.languages,
+            "tour_convinces": tourDetail.guide.tour[0].convinces,
+            "tour_vehicles": tourDetail.guide.tour[0].vehicle,
+            "tour_type": tourDetail.guide.tour[0].type,
+            "tour_detail": tourDetail.guide.tour[0].detail,
+            "tour_price": tourDetail.guide.tour[0].price,
+            "tour_point": tourDetail.guide.tour[0].point,
+            "tour_created_at": tourDetail.guide.tour[0].created_at,
+            "tour_guide_id": tourDetail.guide.id
         })
     } catch (error) {
         logging.error(NAMESPACE, error.message, error);

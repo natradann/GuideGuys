@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class TourCardLGModel {
   late String tourId;
   late String tourName;

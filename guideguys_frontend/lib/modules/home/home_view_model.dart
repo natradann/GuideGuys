@@ -33,7 +33,6 @@ class HomeViewModel {
     List<TourCardLGModel> tagListFiltered = [];
     List<TourCardLGModel> typeTourListFiltered = [];
     List<TourCardLGModel> typeVehicleListFiltered = [];
-    print('feefedd');
     if (tagList.isEmpty && typeTourList.isEmpty && typeVehicleList.isEmpty) {
       return allTours;
     } else if (tagList.isNotEmpty) {

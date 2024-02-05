@@ -40,9 +40,9 @@ class CreateTourModel {
   Map<String, dynamic> toJson() => {
         "tourName": tourName,
         "img": base64Image,
-        "convinces": convinces,
-        "vehicle": vehicle,
-        "tourType": tourType,
+        "convinces": List<dynamic>.from(convinces.map((x) => x)),
+        "vehicle": List<dynamic>.from(vehicle.map((x) => x)),
+        "tourType": List<dynamic>.from(tourType.map((x) => x)),
         "detail": detail,
         "price": price,
       };

@@ -13,8 +13,11 @@ class FindAllListViewModel {
       {List<TourCardLGModel>? allToursData,
       List<GuideModel>? allGuidesData}) async {
     try {
-      allGuides = allGuidesData!;
-      allTours = allToursData!;
+      if (allToursData != null) {
+        allTours = List.from(allToursData);
+      } else if (allGuidesData != null){
+        allGuides = List.from(allGuidesData);
+      }
     } catch (_) {
       rethrow;
     }

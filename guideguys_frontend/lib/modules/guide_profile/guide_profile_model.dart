@@ -33,6 +33,7 @@ class GuideProfileModel {
 
   factory GuideProfileModel.fromJson(Map<String, dynamic> json) {
     try {
+      print(json["convinces"].runtimeType);
       GuideProfileModel guide = GuideProfileModel(
         guideUserId: json['userId'],
         guideId: json['guideId'],
@@ -44,8 +45,10 @@ class GuideProfileModel {
         // guideCardType: json['guideType'],
         cardExpired: DateTime.parse(json['guideCardExpired']),
         guidePoint: json['guidePoint'].toDouble(),
-        convinces: List<String>.from(json["convinces"].split(',').map((x) => x)),
-        languages: List<String>.from(json["languages"].split(',').map((x) => x)),
+        convinces:
+            List<String>.from(json["convinces"].split(',').map((x) => x)),
+        languages:
+            List<String>.from(json["languages"].split(',').map((x) => x)),
         experience: json['experience'],
         alltours: (json['tours'] as List<dynamic>)
             .map<TourModel>((tour) => TourModel.fromJson(tour))
@@ -84,7 +87,8 @@ class TourModel {
         tourId: json['id'].toString(),
         tourName: json['name'],
         tourImgPath: json['img'],
-        convinces: List<String>.from(json["convinces"].split(',').map((x) => x)),
+        convinces:
+            List<String>.from(json["convinces"].split(',').map((x) => x)),
         tourType: List<String>.from(json["type"].split(',').map((x) => x)),
         tourPrice: json['price'],
         tourRatePoint: json['point'].toDouble(),

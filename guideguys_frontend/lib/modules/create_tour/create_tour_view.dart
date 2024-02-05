@@ -88,7 +88,7 @@ class _CreateTourViewState extends State<CreateTourView> {
   @override
   Widget build(BuildContext context) {
     double width = screenWidth(context);
-    double height = screenHeight(context);
+    // double height = screenHeight(context);
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
@@ -186,7 +186,8 @@ class _CreateTourViewState extends State<CreateTourView> {
                           labelTFF: 'รายละเอียดทัวร์',
                           hintTextinTFF: 'เพิ่มรายละเอียดทัวร์',
                           textController: tourDetail,
-                          inputAction: TextInputAction.none,
+                          // inputAction: TextInputAction.none,
+                          inputType: TextInputType.multiline,
                           minLineAmount: 5,
                           onTextChenged: (value) {
                             tourDetail = TextEditingController(text: value);
